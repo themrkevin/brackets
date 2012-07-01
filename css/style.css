@@ -219,10 +219,26 @@ td { vertical-align: top; }
    ========================================================================== */
 
 
+body {
+  background:url(../images/project_papper.png) repeat;
+}
+
+header {
+
+}
+
+#main {
+
+}
+
+.template {
+  display:none;
+}
 
 
+footer {
 
-
+}
 
 
 
