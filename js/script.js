@@ -28,21 +28,42 @@ tBrack.createPlayer = function(playerName) {
 	playerList[playerList.length] = newPlayer;
 	console.log('updated list: ', playerList);
 
-	var thisPlayer = playerList[(playerList.length - 1)];
+	var thisPosition = (playerList.length - 1);
+	var thisPlayer = playerList[thisPosition];
 
-	//display players to list && copy template
-	var $newItem = $listTemplate.clone().removeClass('template');
-	tBrack.template($newItem,thisPlayer).appendTo(($playerList));
+	localStorage.setItem('playerList[' + thisPosition + ']', thisPlayer.name);
 
+	tBrack.addToList(thisPosition);
 }
 
 tBrack.template = function(item,source) {
 
 	//find && replace template data
-	item.find('.list-item-name').text(source.name);
+	item.find('.list-item-name').text(localStorage.getItem('playerList[' + source + ']'));
 
 	return item;
 }
 
+tBrack.addToList = function(thisPosition) {
+	
+	//display players to list && clone template
+	var $newItem = $listTemplate.clone().removeClass('template');
+	tBrack.template($newItem,thisPosition).appendTo(($playerList));
+}
 
+tBrack.repopulate = function() {
+	for ( i = 0; i < localStorage.length; i++ ) {
+		playerList[playerList.length] = localStorage.getItem('playerList[' + i + ']');
 
+		tBrack.addToList(i);
+	}
+
+}
+
+$(document).ready(function() {
+	if(localStorage.length !== 0) {
+		tBrack.repopulate();
+	} else {
+		console.log('localStorage is empty');
+	}
+});
