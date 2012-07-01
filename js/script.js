@@ -10,8 +10,7 @@ var newPlayer,
 	$playerList = $('#player-list'),
 	$brackets = $('#brackets'),
 	$listTemplate = $playerList.find('.template'),
-	$listItemName = $playerList.find('.list-item-name'),
-	$newItem = $listTemplate.clone().removeClass('template');
+	$listItemName = $playerList.find('.list-item-name');
 
 //player constructor
 function Player(name) {
@@ -30,14 +29,16 @@ tBrack.createPlayer = function(playerName) {
 	console.log('updated list: ', playerList);
 
 	var thisPlayer = playerList[(playerList.length - 1)];
-	console.log(thisPlayer);
 
-	//add players to list
-	//$newItem.find('.list-item-name').text(playerName);
+	//display players to list && copy template
+	var $newItem = $listTemplate.clone().removeClass('template');
 	tBrack.template($newItem,thisPlayer).appendTo(($playerList));
-};
+
+}
 
 tBrack.template = function(item,source) {
+
+	//find && replace template data
 	item.find('.list-item-name').text(source.name);
 
 	return item;
