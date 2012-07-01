@@ -9,6 +9,7 @@ var newPlayer,
 	playerNumber,
 	storedPList,
 	parsedPList,
+	playerPos,
 	$playerList = $('#player-list'),
 	$brackets = $('#brackets'),
 	$listTemplate = $playerList.find('.template'),
@@ -43,6 +44,7 @@ tBrack.createPlayer = function(playerName) {
 
 	tBrack.addToList(thisPlayer);
 	tBrack.playerCount();
+
 }
 
 tBrack.loadPList = function() {
@@ -76,20 +78,63 @@ tBrack.repopulate = function() {
 
 }
 
+tBrack.addPlayer = function() {
+	$addPlayer.click(function() {
+
+	});
+}
+
+tBrack.playerForm = function() {
+
+}
+
 tBrack.removePlayer = function() {
 	
-	$('.remove').click(function(){
-		console.log('removal ahoy!');
+	var $liGroup;
+	var $liGroupName;
+
+	$('#player-list .remove').click(function(){
+
+		//target the group LI container
+		$liGroup = $(this).parent().parent();
+
+		$liGroup.fadeOut('slow', function(){
+			$liGroup.remove();
+		});
+		
+		//find the players Name of selected group
+		$liGroupName = $liGroup.find('.list-item-name').text();
+		tBrack.valueOfKey($liGroupName);
+
+		console.log('Player position: ', playerPos);
+		console.log('removing: ', $liGroupName);
+
+		//remove this player from player list && refresh localStorage
+		playerList.splice(playerPos,1);
+		localStorage.setItem('playerList', JSON.stringify(playerList));
+		tBrack.loadPList();
+		tBrack.playerCount();
+
 		return false;
 	});
 	
+}
+
+tBrack.valueOfKey = function(value) {
+	for(var pos in parsedPList) {
+		if(parsedPList[pos].name === value) {
+			console.log('found a match to: ', value);
+
+			playerPos = pos;
+		}
+	}
 }
 
 tBrack.playerCount = function() {
 	$playerCount.text(parsedPList.length);
 }
 
-$(document).ready(function() {
+tBrack.makeItHappen = function() {
 
 	if(localStorage.length !== 0) {
 		tBrack.repopulate();
@@ -98,5 +143,11 @@ $(document).ready(function() {
 	}
 
 	tBrack.removePlayer();
+
+}
+
+$(document).ready(function() {
+
+	tBrack.makeItHappen();
 
 });
