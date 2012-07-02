@@ -12,7 +12,7 @@
        More info: h5bp.com/i/378 -->
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-  <title></title>
+  <title>Phase One - Bracket Project</title>
   <meta name="description" content="">
 
   <!-- Mobile viewport optimized: h5bp.com/viewport -->
@@ -37,19 +37,22 @@
 
   </header>
   <div id="main" role="main">
+    <div id="list-control">
+      <a href="" class="list-toggle ir">Player List</a>
+    </div>
     <div class="left">
       <ul id="player-list">
-        <h2>Players: <span class="count">0</span></h2>
-        <div class="manager clearfix">
-          <form id="player-form" action="" method="post">
-            <input type="text" class="name" name="name" value="Enter Player Name" />
-            <input type="submit" class="submit" value="Add" />
-          </form>
-          <a href="#" class="manager-link add">+</a>
+        <div class="top clearfix">
+          <h2>Players: <span class="count">0</span></h2>
+          <a href="" class="manager-link add pos"></a>
         </div>
+        <form id="player-form" class="clearfix" action="">
+          <input type="text" tabindex="1" class="name" name="name" value="Enter Player Name" />
+          <input type="submit" class="submit" value="Add" />
+        </form>
         <li class="template">
           <p class="list-item-name">Name</p>
-          <p class="remove-container"><a href="#" class="manager-link remove">-</a></p>
+          <p class="remove-container"><a href="" class="manager-link remove"></a></p>
         </li>
       </ul><!-- #player-list -->
     </div><!-- .left -->

@@ -16,7 +16,10 @@ var newPlayer,
 	$listItemName = $playerList.find('.list-item-name'),
 	$playerCount = $playerList.find('.count'),
 	$addPlayer = $playerList.find('.add'),
-	$removePlayer = $playerList.find('.remove');
+	$removePlayer = $playerList.find('.remove'),
+	$playerForm = $('#player-form'),
+	$listControl = $('#list-control'),
+	$listToggle = $listControl.find('.list-toggle');
 
 //player constructor
 function Player(name) {
@@ -79,12 +82,20 @@ tBrack.repopulate = function() {
 }
 
 tBrack.addPlayer = function() {
+
+	//opens the form to add players
 	$addPlayer.click(function() {
-
+		if(($playerForm.is(':visible'))) {
+			$(this).removeClass('neg');
+			$(this).addClass('pos');
+			$playerForm.hide();
+		} else {
+			$(this).removeClass('pos');
+			$(this).addClass('neg');
+			$playerForm.show();
+		}
+		return false;
 	});
-}
-
-tBrack.playerForm = function() {
 
 }
 
@@ -134,6 +145,52 @@ tBrack.playerCount = function() {
 	$playerCount.text(parsedPList.length);
 }
 
+tBrack.formTricks = function() {
+	
+	var $nameField = $playerForm.find('input[name="name"]');
+	var $fieldInput;
+	var $defaultValue = $nameField.val();
+	var $theField = $playerForm.find('input[type="text"]');
+
+	//field focus replace
+	$theField.focus(function() {
+		if(this.value == this.defaultValue) {
+			this.value = '';
+		}
+		if(this.value != this.defaultValue){  
+            this.select();  
+        } 
+	});
+
+	$theField.blur(function() {
+		if($.trim(this.value) == '') {
+			this.value = (this.defaultValue ? this.defaultValue : '');
+		}
+	});
+
+	$playerForm.submit(function() {
+		//take the input value of the name field and shove it into the player maker
+		$fieldInput = $nameField.val();
+		tBrack.createPlayer($fieldInput);
+
+		//restore name field to default
+		$nameField.val('');
+
+		return false;
+	});
+
+}
+
+tBrack.thePlayerList = function() {
+
+	$listToggle.click(function() {
+		$playerList.fadeToggle('slow');
+
+		return false;
+	});
+
+}
+
 tBrack.makeItHappen = function() {
 
 	if(localStorage.length !== 0) {
@@ -142,7 +199,10 @@ tBrack.makeItHappen = function() {
 		console.log('localStorage is empty');
 	}
 
+	tBrack.addPlayer();
 	tBrack.removePlayer();
+	tBrack.formTricks();
+	tBrack.thePlayerList();
 
 }
 
