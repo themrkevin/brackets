@@ -15,7 +15,7 @@ var newPlayer,
 	$listTemplate = $playerList.find('.template'),
 	$listItemName = $playerList.find('.list-item-name'),
 	$playerCount = $playerList.find('.count'),
-	$addPlayer = $playerList.find('.add'),
+	$optionsButton = $playerList.find('.add'),
 	$removePlayer = $playerList.find('.remove'),
 	$playerForm = $('#player-form'),
 	$listControl = $('#list-control'),
@@ -47,6 +47,7 @@ tBrack.createPlayer = function(playerName) {
 
 	tBrack.addToList(thisPlayer);
 	tBrack.playerCount();
+	//tBrack.removePlayer();
 
 }
 
@@ -81,40 +82,43 @@ tBrack.repopulate = function() {
 
 }
 
-tBrack.addPlayer = function() {
+tBrack.toggleOptions = function() {
 
 	//opens the form to add players
-	$addPlayer.click(function() {
+	$optionsButton.click(function() {
 		if(($playerForm.is(':visible'))) {
 			$(this).removeClass('neg');
 			$(this).addClass('pos');
 			$playerForm.hide();
+			$playerList.find('.remove').addClass('switch');
 		} else {
 			$(this).removeClass('pos');
 			$(this).addClass('neg');
 			$playerForm.show();
+			$playerList.find('.remove').removeClass('switch');
 		}
 		return false;
 	});
 
 }
 
+tBrack.setRemovePlayer = function() {
+
+}
+
 tBrack.removePlayer = function() {
 	
-	var $liGroup;
-	var $liGroupName;
-
-	$('#player-list .remove').click(function(){
+	$removePlayer.live('click', function(){
 
 		//target the group LI container
-		$liGroup = $(this).parent().parent();
+		var $liGroup = $(this).parent().parent();
 
 		$liGroup.fadeOut('slow', function(){
 			$liGroup.remove();
 		});
 		
 		//find the players Name of selected group
-		$liGroupName = $liGroup.find('.list-item-name').text();
+		var $liGroupName = $liGroup.find('.list-item-name').text();
 		tBrack.valueOfKey($liGroupName);
 
 		console.log('Player position: ', playerPos);
@@ -199,7 +203,7 @@ tBrack.makeItHappen = function() {
 		console.log('localStorage is empty');
 	}
 
-	tBrack.addPlayer();
+	tBrack.toggleOptions();
 	tBrack.removePlayer();
 	tBrack.formTricks();
 	tBrack.thePlayerList();

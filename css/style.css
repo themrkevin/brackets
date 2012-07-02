@@ -277,6 +277,7 @@ a.list-toggle {
   position:absolute;
   top:10px;
   left:60px;
+  display:none;
 }
 
 #player-list h2 {
@@ -379,8 +380,12 @@ a.remove {
   font-size: 200%;
   line-height: 16pt;
   background:url(../images/plus-minus.jpg) no-repeat center -26px;
-
 }
+
+a.switch {
+  display:none;
+}
+
 
 .template {
   display:none;
