@@ -41,20 +41,27 @@
       <a href="" class="list-toggle ir">Player List</a>
     </div>
     <div class="left">
-      <ul id="player-list">
-        <div class="top clearfix">
-          <h2>Players: <span class="count">0</span></h2>
-          <a href="" class="manager-link add pos"></a>
-        </div>
-        <form id="player-form" class="clearfix" action="">
-          <input type="text" tabindex="1" class="name" name="name" value="Enter Player Name" />
-          <input type="submit" class="submit" value="Add" />
-        </form>
-        <li class="template">
-          <p class="list-item-name">Name</p>
-          <p class="remove-container"><a href="" class="manager-link remove switch"></a></p>
-        </li>
-      </ul><!-- #player-list -->
+      <div id="player-list-container">
+        <ul id="player-list">
+          <div class="top clearfix">
+            <h2>Players: <span class="count">0</span></h2>
+            <a href="" class="manager-link add pos"></a>
+          </div>
+          <form id="player-form" class="clearfix" action="">
+            <input type="text" tabindex="1" class="name" name="name" value="Enter Player Name" />
+            <input type="submit" class="submit" value="Add" />
+          </form>
+          <li class="template">
+            <p class="list-item-name">Name</p>
+            <p class="remove-container"><a href="" class="manager-link remove switch"></a></p>
+          </li>
+        </ul><!-- #player-list -->
+        <a href="" class="clear-all hidden">Clear All</a>
+        <a href="" class="clear-confirm hidden">Rly!?
+          <span class="cancel">No</span>
+          <span class="clear">Yes</span>
+        </a>
+      </div><!-- #player-list-container -->
     </div><!-- .left -->
     <div class="right">
       <div id="brackets">
