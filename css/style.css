@@ -232,6 +232,15 @@ td { vertical-align: top; }
 
 body {
   background:url(../images/project_papper.png) repeat;
+  color:#333;
+}
+
+h1, h2, h3, h4, h5 {
+  margin: 10px 0;
+  font-family: SansitaOneRegular;
+  font-weight: normal;
+  text-shadow: 0 2px 2px rgba(0,0,0,0.5);
+  color:#333;
 }
 
 header {
@@ -243,40 +252,67 @@ header {
 }
 
 .left {
-
+  position:relative;
+  float:left;
+  padding:10px;
 }
-#list-control {
+
+.right {
+  position:relative;
+  float:left;
+  padding:10px;
+}
+#control-panel {
+  margin:0;
+  padding:0;
+  width:40px;
+  float:left;
+}
+
+#control-panel li {
   background:url(../images/leather.png) #333;
   -webkit-box-shadow:  0px 5px 5px 2px rgba(0, 0, 0, 0.5);      
   box-shadow:  0px 5px 5px 2px rgba(0, 0, 0, 0.5);
   border-radius:40px;
   width:40px;
   height:40px;
-  position:absolute;
-  z-index:999;
-  top:10px;
-  left:10px;
+  margin:0 0 10px 0;
+  list-style:none;
 }
 
-a.list-toggle {
+#control-panel li a {
   text-decoration: none;
   color:#F60;
-  background:url(../images/list-icon.jpg) no-repeat center center;
   width:100%;
   height:100%;
 }
 
-#player-list-container {
+a.list-toggle {
+  background:url(../images/list-icon.jpg) no-repeat center center;
+}
+
+a.config {
+  background:#333;
+}
+
+#option-panels {
+  margin:0 0 0 10px;
+  padding:0;
+  float:left;
+}
+
+#option-panels li {
+  list-style:none;
   width:250px;
   background:url(../images/leather.png) #333;
   padding:20px;
   border-radius:7px;
-  margin:0;
+  margin:0 0 20px 0;
   -webkit-box-shadow:  0px 5px 5px 2px rgba(0, 0, 0, 0.5);      
   box-shadow:  0px 5px 5px 2px rgba(0, 0, 0, 0.5);
-  position:absolute;
-  top:10px;
-  left:60px;
+}
+
+.player-list-container {
   display:none;
 }
 
@@ -285,7 +321,10 @@ a.list-toggle {
   padding:0;
 }
 
-#player-list h2 {
+#player-list li {
+  width:auto;
+}
+#option-panels li h2 {
   margin:10px 0;
   color:#FF6600;
   font-family:SansitaOneRegular;
@@ -313,7 +352,7 @@ a.list-toggle {
   border-radius:7px;
 }
 
-#player-list-container .clear-all, #player-list-container .clear-confirm {
+.player-list-container .clear-all, .player-list-container .clear-confirm {
   margin:10px 0;
   background:url(../images/leather-red.jpg) repeat;
   -webkit-box-shadow:  0px 2px 2px rgba(0, 0, 0, 0.2);      
@@ -325,7 +364,7 @@ a.list-toggle {
   color:#fff;
 }
 
-#player-list-container .clear-confirm .cancel, #player-list-container .clear-confirm .clear {
+.player-list-container .clear-confirm .cancel, .player-list-container .clear-confirm .clear {
   display: inline-block;
   background: url(../images/leather.png) repeat;
   border-radius: 5px;
@@ -414,6 +453,16 @@ a.switch {
   display:none;
 }
 
+#brackets {
+
+}
+#brackets h1 {
+  font-size:200%:;
+}
+
+#brackets h2 {
+
+}
 
 .template {
   display:none;

@@ -3,20 +3,11 @@
 */
 
 var playerList = []
-var $playerListContainer = $('#player-list-container'),
+var TourConfig = {}
+var $optionPanels = $('#option-panels'),
 	$playerList = $('#player-list'),
-	$brackets = $('#brackets'),
-	$listTemplate = $playerList.find('.template'),
-	$listItemName = $playerList.find('.list-item-name'),
-	$playerCount = $playerList.find('.count'),
-	$optionsButton = $playerList.find('.add'),
-	$removePlayer = $playerList.find('.remove'),
-	$playerForm = $('#player-form'),
-	$listControl = $('#list-control'),
-	$listToggle = $listControl.find('.list-toggle'),
-	$clearAll = $playerListContainer.find('.clear-all'),
-	$clearConfirm = $playerListContainer.find('.clear-confirm');
-
+	$controlPanel = $('#control-panel');
+	
 var Brack = {
 
 	//create players
@@ -34,18 +25,19 @@ var Brack = {
 		localStorage.setItem('playerList', JSON.stringify(playerList));
 		Brack.loadPList();
 
-		var thisPosition = (Brack.parsedPList.length - 1);
-		var thisPlayer = Brack.parsedPList[thisPosition];
+		var thisPosition = (Brack.pPlayerList.length - 1);
+		var thisPlayer = Brack.pPlayerList[thisPosition];
 
 		Brack.addToList(thisPlayer);
-		Brack.playerCount();
+		Brack.playerCounter();
 		Brack.toggleClear();
+		Brack.configTypeCheck(Brack.typeField,Brack.roundsField);
 
 	},
 
 	loadPList : function() {
-		Brack.storedPList = localStorage.getItem('playerList');
-		Brack.parsedPList = JSON.parse(Brack.storedPList); 
+		Brack.sPlayerList = localStorage.getItem('playerList');
+		Brack.pPlayerList = JSON.parse(Brack.sPlayerList); 
 	},
 
 	template : function(item,source) {
@@ -57,37 +49,28 @@ var Brack = {
 
 	addToList : function(thisPlayer) {
 		
+		Brack.listTemplate = $playerList.find('.template');
+
 		//display players to list && clone template
-		var $newItem = $listTemplate.clone().removeClass('template');
+		var $newItem = Brack.listTemplate.clone().removeClass('template');
 		Brack.template($newItem,thisPlayer).appendTo(($playerList));
-	},
-
-	repopulate : function() {
-
-		Brack.loadPList();
-		//goes through localStorage and repopulates data
-		for ( i = 0; i < Brack.parsedPList.length; i++ ) {
-			playerList[playerList.length] = Brack.parsedPList[i];
-			Brack.addToList(Brack.parsedPList[i]);
-		}
-		Brack.playerCount();
-
 	},
 
 	toggleOptions : function() {
 
+		Brack.optionsButton = $playerList.find('.add');
 		//opens the form to add players
-		$optionsButton.click(function() {
-			if($playerForm.is(':visible')) {
+		Brack.optionsButton.click(function() {
+			if(Brack.playerForm.is(':visible')) {
 				$(this).removeClass('neg');
 				$(this).addClass('pos');
-				$playerForm.hide();
+				Brack.playerForm.hide();
 				$playerList.find('.remove').addClass('switch');
-				$clearAll.addClass('hidden');
+				Brack.clearAll.addClass('hidden');
 			} else {
 				$(this).removeClass('pos');
 				$(this).addClass('neg');
-				$playerForm.show();
+				Brack.playerForm.show();
 				$playerList.find('.remove').removeClass('switch');
 				Brack.toggleClear();
 			}
@@ -99,7 +82,9 @@ var Brack = {
 
 	removePlayer : function() {
 		
-		$removePlayer.live('click', function(){
+		Brack.removePlayer = $playerList.find('.remove');
+
+		Brack.removePlayer.live('click', function(){
 
 			//target the group LI container
 			var $liGroup = $(this).parent().parent();
@@ -120,7 +105,8 @@ var Brack = {
 			playerList.splice(Brack.playerPos,1);
 			localStorage.setItem('playerList', JSON.stringify(playerList));
 			Brack.loadPList();
-			Brack.playerCount();
+			Brack.playerCounter();
+			Brack.configTypeCheck(Brack.typeField,Brack.roundsField);
 
 			return false;
 		});
@@ -129,27 +115,32 @@ var Brack = {
 
 	clearAllPlayer : function() {
 
-		$clearAll.click(function() {
+		Brack.clearAll = Brack.playerListContainer.find('.clear-all');
+		Brack.clearConfirm = Brack.playerListContainer.find('.clear-confirm');
+
+		Brack.clearAll.click(function() {
 			$(this).addClass('hidden');
-			$clearConfirm.removeClass('hidden');
+			Brack.clearConfirm.removeClass('hidden');
 
 			return false;
 		});
 
-		$clearConfirm.click(function() {
+		Brack.clearConfirm.click(function() {
 			return false;
 		});
 
-		$clearConfirm.find('.clear').click(function() {
+		Brack.clearConfirm.find('.clear').click(function() {
 			Brack.clearAllInit();
-			$clearAll.addClass('hidden');
-			$clearConfirm.addClass('hidden');
+			Brack.clearAll.addClass('hidden');
+			Brack.clearConfirm.addClass('hidden');
+			Brack.configTypeCheck(Brack.typeField,Brack.roundsField);
 
+			return false;
 		});
 
-		$clearConfirm.find('.cancel').click(function() {
-			$clearConfirm.addClass('hidden');
-			$clearAll.removeClass('hidden');
+		Brack.clearConfirm.find('.cancel').click(function() {
+			Brack.clearConfirm.addClass('hidden');
+			Brack.clearAll.removeClass('hidden');
 
 			return false;
 		});
@@ -173,7 +164,7 @@ var Brack = {
 		playerList.length = 0;
 		localStorage.setItem('playerList', JSON.stringify(playerList));
 		Brack.loadPList();
-		Brack.playerCount();
+		Brack.playerCounter();
 
 		return false;
 
@@ -183,16 +174,16 @@ var Brack = {
 
 		//this will check to see if there are any players in the field, if not then the clear button will not display
 		if($playerList.find('li:not(".template")').is(':visible')) {
-			$clearAll.removeClass('hidden');
+			Brack.clearAll.removeClass('hidden');
 		} else {
-			$clearAll.addClass('hidden');
+			Brack.clearAll.addClass('hidden');
 		}
 
 	},
 
 	valueOfKey : function(value) {
-		for(var pos in Brack.parsedPList) {
-			if(Brack.parsedPList[pos].name === value) {
+		for(var pos in Brack.pPlayerList) {
+			if(Brack.pPlayerList[pos].name === value) {
 				console.log('found a match to: ', value);
 
 				Brack.playerPos = pos;
@@ -200,19 +191,85 @@ var Brack = {
 		}
 	},
 
-	playerCount : function() {
-		$playerCount.text(Brack.parsedPList.length);
+	playerCounter : function() {
+
+		Brack.playerCount = $playerList.find('.count');
+		Brack.playerCount.text(Brack.pPlayerList.length);
+
+	},
+
+	thePlayerList : function() {
+
+		Brack.playerListContainer = $optionPanels.find('.player-list-container');
+		Brack.listToggle = $controlPanel.find('.list-toggle');
+
+		Brack.listToggle.click(function() {
+			Brack.playerListContainer.toggle();
+
+			return false;
+		});
+
+	},
+
+	buildBrackets : function() {
+
+	},
+
+	assignConfig : function() {
+
+		Brack.brackets = $('#brackets');
+
+		Brack.loadTourConfig();
+		if((Brack.pTourConfig) == null) {
+			console.log('no configuration saved');
+		} else {
+			Brack.brackets.find('h1').text(Brack.pTourConfig.title);
+			Brack.brackets.find('h2').html(Brack.pTourConfig.type + ': <i>' + Brack.pTourConfig.rounds + '<i> Rounds');
+		}
+
+	},
+
+	configTypeCheck : function(typeField,roundsField) {
+
+		if(Brack.pPlayerList !== undefined) {
+			//Checks Event Type
+			var players = Brack.pPlayerList.length;
+
+			if(typeField.val() === 'Limited Rounds') {
+
+			} else if(typeField.val() === 'Single Elimination') {
+				roundsField.val(Math.log(2*players))
+			} else if(typeField.val() === 'Double Elimination') {
+
+			} else if(typeField.val() === 'Round Robin') {
+				roundsField.val(players/2*(players-1));
+			} else {
+				//do nothing
+			}
+		}
+
+	},
+
+	loadTourConfig : function() {
+		Brack.sTourConfig = localStorage.getItem('TourConfig');
+		Brack.pTourConfig = JSON.parse(Brack.sTourConfig);
+		console.log('pTourConfig loaded: ', Brack.pTourConfig);
 	},
 
 	formTricks : function() {
 		
-		var $nameField = $playerForm.find('input[name="name"]');
-		var $fieldInput;
-		var $defaultValue = $nameField.val();
-		var $theField = $playerForm.find('input[type="text"]');
+		Brack.theForm = $('form');
+		Brack.playerForm = $('#player-form'),
+		Brack.configForm = $('#config-form');
+		Brack.theField = Brack.theForm.find('input[type="text"]');
+		Brack.nameField = Brack.playerForm.find('input[name="name"]');
+		Brack.titleField = Brack.configForm.find('input[name="name"]');
+		Brack.fieldInput;
+		Brack.typeField = Brack.configForm.find('select[name="type"]');
+		Brack.roundsField = Brack.configForm.find('input[name="rounds"]');
 
 		//field focus replace
-		$theField.focus(function() {
+		Brack.theField.focus(function() {
 			if(this.value == this.defaultValue) {
 				this.value = '';
 			}
@@ -221,32 +278,62 @@ var Brack = {
 	        } 
 		});
 
-		$theField.blur(function() {
+		Brack.theField.blur(function() {
 			if($.trim(this.value) == '') {
 				this.value = (this.defaultValue ? this.defaultValue : '');
 			}
 		});
 
-		$playerForm.submit(function() {
+		Brack.playerForm.submit(function() {
 			//take the input value of the name field and shove it into the player maker
-			$fieldInput = $nameField.val();
-			Brack.createPlayer($fieldInput);
+			Brack.fieldInput = Brack.nameField.val();
+			Brack.createPlayer(Brack.fieldInput);
 
 			//restore name field to default
-			$nameField.val('');
+			Brack.nameField.val('');
+
+			return false;
+		});
+
+		Brack.typeField.change(function() {
+			Brack.configTypeCheck(Brack.typeField,Brack.roundsField);
+		});
+
+		Brack.configForm.submit(function() {
+			var numericExpression = /^[0-9]+$/;
+			if(Brack.roundsField.val().match(numericExpression)) {
+				//inject field data into object
+				TourConfig.title = Brack.titleField.val();
+				TourConfig.type = Brack.typeField.val();
+				TourConfig.rounds = Brack.roundsField.val();
+
+				//store playerList locally && reload it as a local object
+				localStorage.setItem('TourConfig', JSON.stringify(TourConfig));
+				Brack.assignConfig();
+
+				console.log('Config Updated: ', TourConfig);
+				console.log('Title: ', TourConfig.title);
+				console.log('Type: ', TourConfig.type);
+				console.log('Rounds: ', TourConfig.rounds);
+			} else {
+				console.log('this is not a number');
+			}
 
 			return false;
 		});
 
 	},
 
-	thePlayerList : function() {
+	repopulate : function() {
 
-		$listToggle.click(function() {
-			$playerListContainer.fadeToggle('slow');
-
-			return false;
-		});
+		Brack.loadPList();
+		//goes through localStorage and repopulates data
+		for ( i = 0; i < Brack.pPlayerList.length; i++ ) {
+			playerList[playerList.length] = Brack.pPlayerList[i];
+			Brack.addToList(Brack.pPlayerList[i]);
+		}
+		Brack.playerCounter();
+		Brack.assignConfig();
 
 	},
 

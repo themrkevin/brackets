@@ -36,36 +36,75 @@
   <header>
 
   </header>
-  <div id="main" role="main">
-    <div id="list-control">
-      <a href="" class="list-toggle ir">Player List</a>
-    </div>
-    <div class="left">
-      <div id="player-list-container">
-        <ul id="player-list">
-          <div class="top clearfix">
-            <h2>Players: <span class="count">0</span></h2>
-            <a href="" class="manager-link add pos"></a>
+  <div id="main" class="clearfix" role="main">
+    <div class="left clearfix">
+      <ul id="control-panel">
+        <li class="list-control">
+          <a href="" class="list-toggle ir">Player List</a>
+        </li>
+        <li class="config">
+          <a href="" class="config-toggle ir">Configuration</a>
+        </li>
+      </ul><!-- #control-panel -->
+      <ul id="option-panels">
+        <li class="player-list-container">
+          <ul id="player-list">
+            <div class="top clearfix">
+              <h2>Players: <span class="count">0</span></h2>
+              <a href="" class="manager-link add pos"></a>
+            </div>
+            <form id="player-form" class="clearfix" action="">
+              <input type="text" tabindex="1" class="name" name="name" value="Enter Player Name" />
+              <input type="submit" class="submit" value="Add" />
+            </form>
+            <li class="template">
+              <p class="list-item-name">Name</p>
+              <p class="remove-container"><a href="" class="manager-link remove switch"></a></p>
+            </li>
+          </ul><!-- #player-list -->
+          <a href="" class="clear-all hidden">Clear All</a>
+          <a href="" class="clear-confirm hidden">Rly!?
+            <span class="cancel">No</span>
+            <span class="clear">Yes</span>
+          </a>
+        </li><!-- .player-list-container -->
+        <li class="config-container">
+          <h2>Configuration</h2>
+          <form id="config-form" class="clearfix" action="">
+          <div class="config-title">
+            <label>Event Title</label>
+            <input type="text" tabindex="1" class="name" name="name" value="Enter Event Name" />
           </div>
-          <form id="player-form" class="clearfix" action="">
-            <input type="text" tabindex="1" class="name" name="name" value="Enter Player Name" />
-            <input type="submit" class="submit" value="Add" />
+          <div class="config-type">
+            <label>Event Type</label>
+            <select tabindex="2" class="type" name="type" />
+              <option value="Limited Rounds">Limited Rounds</option>
+              <option value="Single Elimination">Single Elimination</option>
+              <option value="Double Elimination">Double Elimination</option>
+              <option value="Round Robin">Round Robin</option>
+            </select>
+          </div>
+          <div class="config-rounds">
+            <label>Event Rounds</label>
+            <input type="text" tabindex="3" class="rounds" name="rounds" value="Number of Rounds" />
+          </div>
+          <input type="submit" class="submit" value="Save Changes" />
           </form>
-          <li class="template">
-            <p class="list-item-name">Name</p>
-            <p class="remove-container"><a href="" class="manager-link remove switch"></a></p>
-          </li>
-        </ul><!-- #player-list -->
-        <a href="" class="clear-all hidden">Clear All</a>
-        <a href="" class="clear-confirm hidden">Rly!?
-          <span class="cancel">No</span>
-          <span class="clear">Yes</span>
-        </a>
-      </div><!-- #player-list-container -->
+        </li><!-- .config-container -->
+      </ul><!-- #option-panels -->
     </div><!-- .left -->
     <div class="right">
       <div id="brackets">
-
+        <hgroup>
+          <h1>Event Name</h1>
+          <h2>Event Type: <i>0 Rounds</i></h2>
+        </hgroup>
+        <div class="round-template">
+          <ul class="match-template">
+              <li><p class="player-name">Name</p></li>
+              <li><p class="player-name">Name</p></li>
+          </ul>
+        </div>
       </div><!-- #brackets -->
     </div><!-- .right -->
   </div>
