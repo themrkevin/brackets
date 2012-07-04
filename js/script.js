@@ -11,17 +11,18 @@ var Brack = {
 		//throwing the global toys in here to avoid any conflict
 		//from future potential plugins && I just find it easier to read
 
-		Brack.theForm = $('form');
-		Brack.playerList = $('#player-list');
-		Brack.playerForm = $('#player-form');
-		Brack.configForm = $('#config-form');
-		Brack.brackets = $('#brackets');
-		Brack.controlPanel = $('#control-panel');
-		Brack.theField = Brack.theForm.find('input[type="text"]');
-		Brack.nameField = Brack.playerForm.find('input[name="name"]');
-		Brack.titleField = Brack.configForm.find('input[name="name"]');
-		Brack.typeField = Brack.configForm.find('select[name="type"]');
-		Brack.roundsField = Brack.configForm.find('input[name="rounds"]');
+		this.theForm = $('form');
+		this.playerList = $('#player-list');
+		this.playerForm = $('#player-form');
+		this.configForm = $('#config-form');
+		this.brackets = $('#brackets');
+		this.controlPanel = $('#control-panel');
+		this.theField = Brack.theForm.find('input[type="text"]');
+		this.nameField = Brack.playerForm.find('input[name="name"]');
+		this.titleField = Brack.configForm.find('input[name="name"]');
+		this.typeField = Brack.configForm.find('select[name="type"]');
+		this.roundsField = Brack.configForm.find('input[name="rounds"]');
+		this.configSubmit = Brack.configForm.find('.submit');
 
 	},
 
@@ -92,6 +93,43 @@ var Brack = {
 
 			return false;
 		});
+
+		Brack.conOptButton = Brack.configForm.find('.add');
+		Brack.currentSet = Brack.configForm.find('.set');
+
+		if((Brack.pTourConfig) == null) {
+			console.log('no configuration saved');
+
+			Brack.conOptButton.addClass('hidden');
+			Brack.currentSet.addClass('hidden');
+			Brack.configSubmit.removeClass('hidden');
+			Brack.titleField.removeClass('hidden');
+			Brack.typeField.removeClass('hidden');
+			Brack.roundsField.removeClass('hidden');
+
+		} else {
+			Brack.conOptButton.click(function() {
+				if(Brack.configSubmit.is(':visible')) {
+					$(this).removeClass('neg');
+					$(this).addClass('pos');
+					Brack.configSubmit.addClass('hidden');
+					Brack.titleField.addClass('hidden');
+					Brack.typeField.addClass('hidden');
+					Brack.roundsField.addClass('hidden');
+					Brack.assignConfig();
+				} else {
+					$(this).removeClass('pos');
+					$(this).addClass('neg');
+					Brack.configSubmit.removeClass('hidden');
+					Brack.titleField.removeClass('hidden');
+					Brack.typeField.removeClass('hidden');
+					Brack.roundsField.removeClass('hidden');
+				}
+
+				return false;
+			});
+		}
+
 
 	},
 
@@ -226,6 +264,15 @@ var Brack = {
 			return false;
 		});
 
+		Brack.configContainer = Brack.optionPanels.find('.config-container');
+		Brack.configToggle = Brack.controlPanel.find('.config-toggle');
+
+		Brack.configToggle.click(function() {
+			Brack.configContainer.toggle();
+
+			return false;
+		});
+
 	},
 
 	buildBrackets : function() {
@@ -249,25 +296,39 @@ var Brack = {
 
 	configTypeCheck : function(typeField,roundsField) {
 
+		Brack.inputRounds = Brack.configForm.find('.input-rounds');
+
 		if(Brack.pPlayerList !== undefined) {
 			//Checks Event Type
 			var players = Brack.pPlayerList.length;
+			var totalRounds;
 
 			if(typeField.val() === 'Single Elimination') {
 				var formula = Math.log(players)/Math.LN2;
 
 				if(formula % 1 !== 0) {
-					roundsField.val(Math.floor(formula) + 1);
+					totalRounds = (Math.floor(formula) + 1);
 				} else {
-					roundsField.val(formula);
+					totalRounds = (formula);
 				}
+
+				Brack.inputRounds.text(totalRounds);
+				roundsField.addClass('hidden');
 			} else if(typeField.val() === 'Double Elimination') {
-				roundsField.val(2*players-1);
+				totalRounds = (2*players-1);
+				Brack.inputRounds.text(totalRounds);
+				roundsField.addClass('hidden');
 			} else if(typeField.val() === 'Round Robin') {
-				roundsField.val(players/2*(players-1));
+				totalRounds = (players/2*(players-1));
+				Brack.inputRounds.text(totalRounds);
+				roundsField.addClass('hidden');
 			} else {
-				roundsField.val('Enter # of Rounds');
+				totalRounds = 'Enter # of Rounds';
+				Brack.inputRounds.text(3);
+				roundsField.removeClass('hidden');
 			}
+
+			roundsField.val(totalRounds);
 		}
 
 	},
@@ -353,10 +414,10 @@ var Brack = {
 
 	makeItHappen : function() {
 
-		if(localStorage.length !== 0) {
+		if(localStorage.playerList !== undefined) {
 			Brack.repopulate();
 		} else {
-			console.log('localStorage is empty');
+			console.log('there are no players');
 		}
 
 		Brack.toggleOptions();

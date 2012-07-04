@@ -69,29 +69,32 @@
           </a>
         </li><!-- .player-list-container -->
         <li class="config-container">
-          <h2>Configuration</h2>
           <form id="config-form" class="clearfix" action="">
-          <div class="config-title">
-            <label>Event Title:</label>
-            <p class="set input-title">Default Title</p>
-            <input type="text" tabindex="1" class="name" name="name" value="Enter Event Name" />
-          </div>
-          <div class="config-type">
-            <label>Event Type:</label>
-            <p class="set input-type">Limited Rounds</p>
-            <select tabindex="2" class="type" name="type" />
-              <option value="Limited Rounds">Limited Rounds</option>
-              <option value="Single Elimination">Single Elimination</option>
-              <option value="Double Elimination">Double Elimination</option>
-              <option value="Round Robin">Round Robin</option>
-            </select>
-          </div>
-          <div class="config-rounds">
-            <label>Event Rounds:</label>
-            <p class="set input-rounds">3</p>
-            <input type="text" tabindex="3" class="rounds" name="rounds" value="Enter # of Rounds" />
-          </div>
-          <input type="submit" class="submit" value="Save Changes" />
+            <div class="top clearfix">
+              <h2>Configuration</h2>
+              <a href="" class="manager-link add pos"></a>
+            </div>
+            <div class="config-title">
+              <label>Event Title:</label>
+              <p class="set input-title">Default Title</p>
+              <input type="text" tabindex="1" class="name hidden" name="name" value="Enter Event Name" />
+            </div>
+            <div class="config-type">
+              <label>Event Type:</label>
+              <p class="set input-type">Limited Rounds</p>
+              <select tabindex="2" class="type hidden" name="type" />
+                <option value="Limited Rounds">Limited Rounds</option>
+                <option value="Single Elimination">Single Elimination</option>
+                <option value="Double Elimination">Double Elimination</option>
+                <option value="Round Robin">Round Robin</option>
+              </select>
+            </div>
+            <div class="config-rounds">
+              <label>Event Rounds:</label>
+              <p class="set input-rounds">3</p>
+              <input type="text" tabindex="3" class="rounds hidden" name="rounds" value="Enter # of Rounds" />
+            </div>
+            <input type="submit" class="submit hidden" value="Save Changes" />
           </form>
         </li><!-- .config-container -->
       </ul><!-- #option-panels -->
