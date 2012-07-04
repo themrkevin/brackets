@@ -23,6 +23,7 @@ var Brack = {
 		this.typeField = Brack.configForm.find('select[name="type"]');
 		this.roundsField = Brack.configForm.find('input[name="rounds"]');
 		this.configSubmit = Brack.configForm.find('.submit');
+		this.currentSet = Brack.configForm.find('.set');
 
 	},
 
@@ -94,9 +95,9 @@ var Brack = {
 			return false;
 		});
 
+		//opens the form to edit configuration
 		Brack.conOptButton = Brack.configForm.find('.add');
-		Brack.currentSet = Brack.configForm.find('.set');
-
+		
 		if((Brack.pTourConfig) == null) {
 			console.log('no configuration saved');
 
@@ -106,8 +107,11 @@ var Brack = {
 			Brack.titleField.removeClass('hidden');
 			Brack.typeField.removeClass('hidden');
 			Brack.roundsField.removeClass('hidden');
-
 		} else {
+			Brack.repopulate();
+			Brack.currentSet.removeClass('hidden');
+			Brack.conOptButton.removeClass('hidden');
+
 			Brack.conOptButton.click(function() {
 				if(Brack.configSubmit.is(':visible')) {
 					$(this).removeClass('neg');
@@ -251,10 +255,11 @@ var Brack = {
 
 	},
 
-	thePlayerList : function() {
+	panelControls : function() {
 
 		Brack.optionPanels = $('#option-panels');
 
+		//controls the players panel
 		Brack.playerListContainer = Brack.optionPanels.find('.player-list-container');
 		Brack.listToggle = Brack.controlPanel.find('.list-toggle');
 
@@ -264,11 +269,13 @@ var Brack = {
 			return false;
 		});
 
+		//controls the configuration panel
 		Brack.configContainer = Brack.optionPanels.find('.config-container');
 		Brack.configToggle = Brack.controlPanel.find('.config-toggle');
 
 		Brack.configToggle.click(function() {
 			Brack.configContainer.toggle();
+			Brack.configTypeCheck(Brack.typeField,Brack.roundsField);
 
 			return false;
 		});
@@ -303,6 +310,9 @@ var Brack = {
 			var players = Brack.pPlayerList.length;
 			var totalRounds;
 
+			Brack.configForm.find('.config-rounds').removeClass('hidden');
+			roundsField.removeClass('hidden');
+
 			if(typeField.val() === 'Single Elimination') {
 				var formula = Math.log(players)/Math.LN2;
 
@@ -329,6 +339,21 @@ var Brack = {
 			}
 
 			roundsField.val(totalRounds);
+		} else {
+			if(typeField.val() !== 'Limited Rounds') {
+				Brack.configForm.find('.config-rounds').addClass('hidden');
+				roundsField.addClass('hidden');
+
+			}
+			Brack.typeField.change(function() {
+				if(typeField.val() === 'Limited Rounds') {
+					Brack.configForm.find('.config-rounds').removeClass('hidden');
+					roundsField.removeClass('hidden');
+				} else {
+					Brack.configForm.find('.config-rounds').addClass('hidden');
+					roundsField.addClass('hidden');
+				}
+			});
 		}
 
 	},
@@ -423,7 +448,7 @@ var Brack = {
 		Brack.toggleOptions();
 		Brack.removePlayer();
 		Brack.formTricks();
-		Brack.thePlayerList();
+		Brack.panelControls();
 		Brack.clearAllPlayer();
 
 	}

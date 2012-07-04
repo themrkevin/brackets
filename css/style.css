@@ -295,6 +295,10 @@ a.config {
   background:#333;
 }
 
+a.config-toggle {
+  background:url(../images/wrench-icon.png) no-repeat center center;
+}
+
 #option-panels {
   margin:0 0 0 10px;
   padding:0;
