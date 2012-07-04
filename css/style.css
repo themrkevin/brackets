@@ -385,7 +385,7 @@ a.config {
 }
 
 #player-form input {
-  border-radius:7px;
+  border-radius:5px;
   padding:5px;
   width:160px;
   color:#666;
@@ -451,6 +451,50 @@ a.remove {
 
 a.switch {
   display:none;
+}
+
+#config-form {
+
+}
+
+#config-form label {
+  font:normal 120% SansitaOneRegular;
+  color:#01B9B5;
+  margin:10px 0;
+  display:block;
+  text-shadow: 0 2px 2px rgba(0,0,0,0.5);
+}
+
+#config-form .set {
+  margin:5px 0;
+  color:#fff;
+  background:#01B9B5;
+  border-radius:5px;
+  padding:10px;
+}
+
+#config-form input {
+  border-radius:5px;
+  padding:10px;
+  width:230px;
+  color:#666;
+  border:none;
+  display:block;
+}
+
+#config-form select {
+  width:250px;
+  color:#666;
+}
+
+#config-form .rounds {
+
+}
+
+#config-form .submit {
+  width:auto;
+  float:right;
+  margin:10px 0;
 }
 
 #brackets {

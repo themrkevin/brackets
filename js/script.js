@@ -4,11 +4,26 @@
 
 var playerList = []
 var TourConfig = {}
-var $optionPanels = $('#option-panels'),
-	$playerList = $('#player-list'),
-	$controlPanel = $('#control-panel');
-	
 var Brack = {
+
+	globalSelectors : function() {
+
+		//throwing the global toys in here to avoid any conflict
+		//from future potential plugins && I just find it easier to read
+
+		Brack.theForm = $('form');
+		Brack.playerList = $('#player-list');
+		Brack.playerForm = $('#player-form');
+		Brack.configForm = $('#config-form');
+		Brack.brackets = $('#brackets');
+		Brack.controlPanel = $('#control-panel');
+		Brack.theField = Brack.theForm.find('input[type="text"]');
+		Brack.nameField = Brack.playerForm.find('input[name="name"]');
+		Brack.titleField = Brack.configForm.find('input[name="name"]');
+		Brack.typeField = Brack.configForm.find('select[name="type"]');
+		Brack.roundsField = Brack.configForm.find('input[name="rounds"]');
+
+	},
 
 	//create players
 	createPlayer : function(playerName) {
@@ -49,29 +64,29 @@ var Brack = {
 
 	addToList : function(thisPlayer) {
 		
-		Brack.listTemplate = $playerList.find('.template');
+		Brack.listTemplate = Brack.playerList.find('.template');
 
 		//display players to list && clone template
 		var $newItem = Brack.listTemplate.clone().removeClass('template');
-		Brack.template($newItem,thisPlayer).appendTo(($playerList));
+		Brack.template($newItem,thisPlayer).appendTo((Brack.playerList));
 	},
 
 	toggleOptions : function() {
 
-		Brack.optionsButton = $playerList.find('.add');
+		Brack.optionsButton = Brack.playerList.find('.add');
 		//opens the form to add players
 		Brack.optionsButton.click(function() {
 			if(Brack.playerForm.is(':visible')) {
 				$(this).removeClass('neg');
 				$(this).addClass('pos');
 				Brack.playerForm.hide();
-				$playerList.find('.remove').addClass('switch');
+				Brack.playerList.find('.remove').addClass('switch');
 				Brack.clearAll.addClass('hidden');
 			} else {
 				$(this).removeClass('pos');
 				$(this).addClass('neg');
 				Brack.playerForm.show();
-				$playerList.find('.remove').removeClass('switch');
+				Brack.playerList.find('.remove').removeClass('switch');
 				Brack.toggleClear();
 			}
 
@@ -82,7 +97,7 @@ var Brack = {
 
 	removePlayer : function() {
 		
-		Brack.removePlayer = $playerList.find('.remove');
+		Brack.removePlayer = Brack.playerList.find('.remove');
 
 		Brack.removePlayer.live('click', function(){
 
@@ -150,7 +165,7 @@ var Brack = {
 	clearAllInit : function() {
 
 		//target all the players (li) except for template (li)
-		var $liList = $playerList.find('li:not(".template")');
+		var $liList = Brack.playerList.find('li:not(".template")');
 
 		$liList.fadeOut('slow', function(){
 			$liList.remove();
@@ -173,7 +188,7 @@ var Brack = {
 	toggleClear : function() {
 
 		//this will check to see if there are any players in the field, if not then the clear button will not display
-		if($playerList.find('li:not(".template")').is(':visible')) {
+		if(Brack.playerList.find('li:not(".template")').is(':visible')) {
 			Brack.clearAll.removeClass('hidden');
 		} else {
 			Brack.clearAll.addClass('hidden');
@@ -193,15 +208,17 @@ var Brack = {
 
 	playerCounter : function() {
 
-		Brack.playerCount = $playerList.find('.count');
+		Brack.playerCount = Brack.playerList.find('.count');
 		Brack.playerCount.text(Brack.pPlayerList.length);
 
 	},
 
 	thePlayerList : function() {
 
-		Brack.playerListContainer = $optionPanels.find('.player-list-container');
-		Brack.listToggle = $controlPanel.find('.list-toggle');
+		Brack.optionPanels = $('#option-panels');
+
+		Brack.playerListContainer = Brack.optionPanels.find('.player-list-container');
+		Brack.listToggle = Brack.controlPanel.find('.list-toggle');
 
 		Brack.listToggle.click(function() {
 			Brack.playerListContainer.toggle();
@@ -217,14 +234,15 @@ var Brack = {
 
 	assignConfig : function() {
 
-		Brack.brackets = $('#brackets');
-
 		Brack.loadTourConfig();
 		if((Brack.pTourConfig) == null) {
 			console.log('no configuration saved');
 		} else {
 			Brack.brackets.find('h1').text(Brack.pTourConfig.title);
 			Brack.brackets.find('h2').html(Brack.pTourConfig.type + ': <i>' + Brack.pTourConfig.rounds + '<i> Rounds');
+			Brack.configForm.find('.input-title').text(Brack.pTourConfig.title);
+			Brack.configForm.find('.input-type').text(Brack.pTourConfig.type);
+			Brack.configForm.find('.input-rounds').text(Brack.pTourConfig.rounds);
 		}
 
 	},
@@ -235,16 +253,20 @@ var Brack = {
 			//Checks Event Type
 			var players = Brack.pPlayerList.length;
 
-			if(typeField.val() === 'Limited Rounds') {
+			if(typeField.val() === 'Single Elimination') {
+				var formula = Math.log(players)/Math.LN2;
 
-			} else if(typeField.val() === 'Single Elimination') {
-				roundsField.val(Math.log(2*players))
+				if(formula % 1 !== 0) {
+					roundsField.val(Math.floor(formula) + 1);
+				} else {
+					roundsField.val(formula);
+				}
 			} else if(typeField.val() === 'Double Elimination') {
-
+				roundsField.val(2*players-1);
 			} else if(typeField.val() === 'Round Robin') {
 				roundsField.val(players/2*(players-1));
 			} else {
-				//do nothing
+				roundsField.val('Enter # of Rounds');
 			}
 		}
 
@@ -258,23 +280,15 @@ var Brack = {
 
 	formTricks : function() {
 		
-		Brack.theForm = $('form');
-		Brack.playerForm = $('#player-form'),
-		Brack.configForm = $('#config-form');
-		Brack.theField = Brack.theForm.find('input[type="text"]');
-		Brack.nameField = Brack.playerForm.find('input[name="name"]');
-		Brack.titleField = Brack.configForm.find('input[name="name"]');
 		Brack.fieldInput;
-		Brack.typeField = Brack.configForm.find('select[name="type"]');
-		Brack.roundsField = Brack.configForm.find('input[name="rounds"]');
-
+		
 		//field focus replace
 		Brack.theField.focus(function() {
 			if(this.value == this.defaultValue) {
 				this.value = '';
 			}
 			if(this.value != this.defaultValue){  
-	            this.select();  
+	            this.select();
 	        } 
 		});
 
@@ -361,6 +375,7 @@ function Player(name) {
 
 $(document).ready(function() {
 
+	Brack.globalSelectors();
 	Brack.makeItHappen();
 
 });
