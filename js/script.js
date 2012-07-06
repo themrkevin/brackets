@@ -46,15 +46,15 @@ var Brack = {
 		var thisPlayer = Brack.pPlayerList[thisPosition];
 
 		Brack.addToList(thisPlayer);
-		Brack.playerCounter();
 		Brack.toggleClear();
-		Brack.configTypeCheck(Brack.typeField,Brack.roundsField);
+		Brack.updateThatJunk();
 
 	},
 
 	loadPList : function() {
 		Brack.sPlayerList = localStorage.getItem('playerList');
-		Brack.pPlayerList = JSON.parse(Brack.sPlayerList); 
+		Brack.pPlayerList = JSON.parse(Brack.sPlayerList);
+		//console.log('pPlayerList loaded: ', Brack.pPlayerList);
 	},
 
 	template : function(item,source) {
@@ -71,70 +71,6 @@ var Brack = {
 		//display players to list && clone template
 		var $newItem = Brack.listTemplate.clone().removeClass('template');
 		Brack.template($newItem,thisPlayer).appendTo((Brack.playerList));
-	},
-
-	toggleOptions : function() {
-
-		Brack.optionsButton = Brack.playerList.find('.add');
-		//opens the form to add players
-		Brack.optionsButton.click(function() {
-			if(Brack.playerForm.is(':visible')) {
-				$(this).removeClass('neg');
-				$(this).addClass('pos');
-				Brack.playerForm.hide();
-				Brack.playerList.find('.remove').addClass('switch');
-				Brack.clearAll.addClass('hidden');
-			} else {
-				$(this).removeClass('pos');
-				$(this).addClass('neg');
-				Brack.playerForm.show();
-				Brack.playerList.find('.remove').removeClass('switch');
-				Brack.toggleClear();
-			}
-
-			return false;
-		});
-
-		//opens the form to edit configuration
-		Brack.conOptButton = Brack.configForm.find('.add');
-		
-		if((Brack.pTourConfig) == null) {
-			console.log('no configuration saved');
-
-			Brack.conOptButton.addClass('hidden');
-			Brack.currentSet.addClass('hidden');
-			Brack.configSubmit.removeClass('hidden');
-			Brack.titleField.removeClass('hidden');
-			Brack.typeField.removeClass('hidden');
-			Brack.roundsField.removeClass('hidden');
-		} else {
-			Brack.repopulate();
-			Brack.currentSet.removeClass('hidden');
-			Brack.conOptButton.removeClass('hidden');
-
-			Brack.conOptButton.click(function() {
-				if(Brack.configSubmit.is(':visible')) {
-					$(this).removeClass('neg');
-					$(this).addClass('pos');
-					Brack.configSubmit.addClass('hidden');
-					Brack.titleField.addClass('hidden');
-					Brack.typeField.addClass('hidden');
-					Brack.roundsField.addClass('hidden');
-					Brack.assignConfig();
-				} else {
-					$(this).removeClass('pos');
-					$(this).addClass('neg');
-					Brack.configSubmit.removeClass('hidden');
-					Brack.titleField.removeClass('hidden');
-					Brack.typeField.removeClass('hidden');
-					Brack.roundsField.removeClass('hidden');
-				}
-
-				return false;
-			});
-		}
-
-
 	},
 
 	removePlayer : function() {
@@ -162,8 +98,7 @@ var Brack = {
 			playerList.splice(Brack.playerPos,1);
 			localStorage.setItem('playerList', JSON.stringify(playerList));
 			Brack.loadPList();
-			Brack.playerCounter();
-			Brack.configTypeCheck(Brack.typeField,Brack.roundsField);
+			Brack.updateThatJunk();
 
 			return false;
 		});
@@ -190,7 +125,6 @@ var Brack = {
 			Brack.clearAllInit();
 			Brack.clearAll.addClass('hidden');
 			Brack.clearConfirm.addClass('hidden');
-			Brack.configTypeCheck(Brack.typeField,Brack.roundsField);
 
 			return false;
 		});
@@ -211,6 +145,7 @@ var Brack = {
 
 		$liList.fadeOut('slow', function(){
 			$liList.remove();
+			Brack.updateThatJunk();
 		});
 		
 		//find the player names
@@ -221,9 +156,63 @@ var Brack = {
 		playerList.length = 0;
 		localStorage.setItem('playerList', JSON.stringify(playerList));
 		Brack.loadPList();
-		Brack.playerCounter();
 
 		return false;
+
+	},
+
+	updateThatJunk : function() {
+		Brack.playerCounter();
+		Brack.configTypeCheck(Brack.typeField,Brack.roundsField);
+		Brack.filterConfig();
+	},
+
+	toggleOptions : function() {
+
+		Brack.optionsButton = Brack.playerList.find('.add');
+		//opens the form to add players
+		Brack.optionsButton.click(function() {
+			if(Brack.playerForm.is(':visible')) {
+				$(this).removeClass('neg');
+				$(this).addClass('pos');
+				Brack.playerForm.hide();
+				Brack.playerList.find('.remove').addClass('switch');
+				Brack.clearAll.addClass('hidden');
+			} else {
+				$(this).removeClass('pos');
+				$(this).addClass('neg');
+				Brack.playerForm.show();
+				Brack.playerList.find('.remove').removeClass('switch');
+				Brack.toggleClear();
+			}
+
+			return false;
+		});
+
+		//opens the form to edit configuration
+		Brack.conOptButton = Brack.configForm.find('.add');
+		
+		Brack.conOptButton.click(function() {
+			if(Brack.configSubmit.is(':visible')) {
+				$(this).removeClass('neg');
+				$(this).addClass('pos');
+				Brack.configSubmit.addClass('hidden');
+				Brack.titleField.addClass('hidden');
+				Brack.typeField.addClass('hidden');
+				Brack.roundsField.addClass('hidden');
+				Brack.assignConfig();
+			} else {
+				$(this).removeClass('pos');
+				$(this).addClass('neg');
+				Brack.configSubmit.removeClass('hidden');
+				Brack.titleField.removeClass('hidden');
+				Brack.typeField.removeClass('hidden');
+				Brack.roundsField.removeClass('hidden');
+			}
+
+			return false;
+		});
+
 
 	},
 
@@ -272,10 +261,18 @@ var Brack = {
 		//controls the configuration panel
 		Brack.configContainer = Brack.optionPanels.find('.config-container');
 		Brack.configToggle = Brack.controlPanel.find('.config-toggle');
+		//Brack.configTypeCheck(Brack.typeField,Brack.roundsField);
 
 		Brack.configToggle.click(function() {
-			Brack.configContainer.toggle();
-			Brack.configTypeCheck(Brack.typeField,Brack.roundsField);
+			if(Brack.configContainer.is(':visible')) {
+				Brack.configContainer.hide();
+				Brack.conOptButton.removeClass('neg');
+				Brack.conOptButton.addClass('pos');
+			} else {
+				Brack.filterConfig();
+				Brack.configContainer.show();
+			}
+			
 
 			return false;
 		});
@@ -289,7 +286,7 @@ var Brack = {
 	assignConfig : function() {
 
 		Brack.loadTourConfig();
-		if((Brack.pTourConfig) == null) {
+		if(Brack.pTourConfig == null) {
 			console.log('no configuration saved');
 		} else {
 			Brack.brackets.find('h1').text(Brack.pTourConfig.title);
@@ -297,6 +294,77 @@ var Brack = {
 			Brack.configForm.find('.input-title').text(Brack.pTourConfig.title);
 			Brack.configForm.find('.input-type').text(Brack.pTourConfig.type);
 			Brack.configForm.find('.input-rounds').text(Brack.pTourConfig.rounds);
+		}
+
+	},
+
+	filterConfig : function() {
+
+		Brack.roundsSet = Brack.configForm.find('.input-rounds');
+
+		if(Brack.pPlayerList == null || Brack.pPlayerList.length == 0 && Brack.pTourConfig == null) {
+			//filter state
+			console.log('playerList is null');
+			console.log('pTourConfig is null');
+
+			//handle form field elements
+			Brack.titleField.removeClass('hidden');
+			Brack.typeField.removeClass('hidden');
+			Brack.roundsField.addClass('hidden');
+			Brack.configSubmit.removeClass('hidden');
+
+			//hide rounds input field and label
+			Brack.currentSet.addClass('hidden');
+			Brack.configForm.find('.config-rounds').addClass('hidden');
+
+			//handle options toggle
+			Brack.conOptButton.addClass('hidden');
+		} else if ((Brack.pPlayerList !== null || Brack.pPlayerList.length > 0) && Brack.pTourConfig == null) {
+			//filter state
+			console.log('playerList is available');
+			console.log('pTourConfig is null');
+
+			//handle field elements
+			Brack.titleField.removeClass('hidden');
+			Brack.typeField.removeClass('hidden');
+			Brack.roundsField.removeClass('hidden');
+
+			//hide rounds input field and label
+			Brack.currentSet.addClass('hidden');
+
+			//handle options toggle
+			Brack.conOptButton.addClass('hidden');
+		} else if ((Brack.pPlayerList == null || Brack.pPlayerList.length == 0) && Brack.pTourConfig !== null) {
+			//filter state
+			console.log('playerList is null');
+			console.log('pTourConfig is available');
+
+			//handle field elements
+			Brack.titleField.addClass('hidden');
+			Brack.typeField.addClass('hidden');
+			Brack.roundsField.addClass('hidden');
+
+			//hide rounds input field and label
+			Brack.currentSet.removeClass('hidden');
+
+			//handle options toggle
+			Brack.conOptButton.removeClass('hidden');
+		} else {
+			//filter state
+			console.log('playerList is available');
+			console.log('pTourConfig is available');
+
+			//handle form field elements
+			Brack.titleField.addClass('hidden');
+			Brack.typeField.addClass('hidden');
+			Brack.roundsField.addClass('hidden');
+			Brack.configSubmit.addClass('hidden');
+
+			//hide rounds input field and label
+			Brack.currentSet.removeClass('hidden');
+
+			//handle options toggle
+			Brack.conOptButton.removeClass('hidden');
 		}
 
 	},
@@ -318,14 +386,23 @@ var Brack = {
 
 				if(formula % 1 !== 0) {
 					totalRounds = (Math.floor(formula) + 1);
+					if(totalRounds == '-Infinity') {
+						totalRounds = 0;
+					}
 				} else {
 					totalRounds = (formula);
+					if(totalRounds == '-Infinity') {
+						totalRounds = 0;
+					}
 				}
 
 				Brack.inputRounds.text(totalRounds);
 				roundsField.addClass('hidden');
 			} else if(typeField.val() === 'Double Elimination') {
 				totalRounds = (2*players-1);
+				if(totalRounds == '-1') {
+					totalRounds = 0;
+				}
 				Brack.inputRounds.text(totalRounds);
 				roundsField.addClass('hidden');
 			} else if(typeField.val() === 'Round Robin') {
@@ -361,7 +438,7 @@ var Brack = {
 	loadTourConfig : function() {
 		Brack.sTourConfig = localStorage.getItem('TourConfig');
 		Brack.pTourConfig = JSON.parse(Brack.sTourConfig);
-		console.log('pTourConfig loaded: ', Brack.pTourConfig);
+		//console.log('pTourConfig loaded: ', Brack.pTourConfig);
 	},
 
 	formTricks : function() {
@@ -401,11 +478,17 @@ var Brack = {
 
 		Brack.configForm.submit(function() {
 			var numericExpression = /^[0-9]+$/;
-			if(Brack.roundsField.val().match(numericExpression)) {
+			if(Brack.roundsField.val().match(numericExpression) || Brack.roundsField.val() === 'Enter # of Rounds' || Brack.roundsField.val() == '-Infinity' || Brack.roundsField.val() == '-1') {
 				//inject field data into object
 				TourConfig.title = Brack.titleField.val();
 				TourConfig.type = Brack.typeField.val();
-				TourConfig.rounds = Brack.roundsField.val();
+				if(Brack.roundsField.val() == 'Enter # of Rounds') {
+					TourConfig.rounds = 3;
+				} else if(Brack.roundsField.val() == '-Infinity' || Brack.roundsField.val() == '-1') {
+					TourConfig.rounds = 0;
+				} else {
+					TourConfig.rounds = Brack.roundsField.val();
+				}
 
 				//store playerList locally && reload it as a local object
 				localStorage.setItem('TourConfig', JSON.stringify(TourConfig));
@@ -427,24 +510,22 @@ var Brack = {
 	repopulate : function() {
 
 		Brack.loadPList();
-		//goes through localStorage and repopulates data
-		for ( i = 0; i < Brack.pPlayerList.length; i++ ) {
-			playerList[playerList.length] = Brack.pPlayerList[i];
-			Brack.addToList(Brack.pPlayerList[i]);
-		}
-		Brack.playerCounter();
 		Brack.assignConfig();
+		if(Brack.pPlayerList !== null) {
+			//goes through localStorage and repopulates data
+			for ( i = 0; i < Brack.pPlayerList.length; i++ ) {
+				playerList[playerList.length] = Brack.pPlayerList[i];
+				Brack.addToList(Brack.pPlayerList[i]);
+			}
+			Brack.playerCounter();
+		}
+
 
 	},
 
 	makeItHappen : function() {
-
-		if(localStorage.playerList !== undefined) {
-			Brack.repopulate();
-		} else {
-			console.log('there are no players');
-		}
-
+		
+		Brack.repopulate();
 		Brack.toggleOptions();
 		Brack.removePlayer();
 		Brack.formTricks();
