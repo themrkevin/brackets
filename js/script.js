@@ -299,7 +299,7 @@ var Brack = {
 	},
 
 	filterConfig : function() {
-
+		console.time('Filter Configuration');
 		Brack.roundsSet = Brack.configForm.find('.input-rounds');
 
 		if(Brack.pPlayerList == null || Brack.pPlayerList.length == 0 && Brack.pTourConfig == null) {
@@ -366,7 +366,7 @@ var Brack = {
 			//handle options toggle
 			Brack.conOptButton.removeClass('hidden');
 		}
-
+		console.timeEnd('Filter Configuration');
 	},
 
 	configTypeCheck : function(typeField,roundsField) {
@@ -417,13 +417,13 @@ var Brack = {
 
 			roundsField.val(totalRounds);
 		} else {
-			if(typeField.val() !== 'Limited Rounds') {
+			if(typeField.val() !== 'Swiss') {
 				Brack.configForm.find('.config-rounds').addClass('hidden');
 				roundsField.addClass('hidden');
 
 			}
 			Brack.typeField.change(function() {
-				if(typeField.val() === 'Limited Rounds') {
+				if(typeField.val() === 'Swiss') {
 					Brack.configForm.find('.config-rounds').removeClass('hidden');
 					roundsField.removeClass('hidden');
 				} else {
@@ -498,7 +498,22 @@ var Brack = {
 				console.log('Title: ', TourConfig.title);
 				console.log('Type: ', TourConfig.type);
 				console.log('Rounds: ', TourConfig.rounds);
+
+				//handle form field elements
+				Brack.titleField.addClass('hidden');
+				Brack.typeField.addClass('hidden');
+				Brack.roundsField.addClass('hidden');
+				Brack.configSubmit.addClass('hidden');
+
+				//hide rounds input field and label
+				Brack.currentSet.removeClass('hidden');
+
+				//handle options toggle
+				Brack.conOptButton.removeClass('hidden');
+				Brack.conOptButton.addClass('pos');
 			} else {
+				Brack.roundsField.select();
+				Brack.configForm.find('.input-rounds').text('This is not a number =(');
 				console.log('this is not a number');
 			}
 
@@ -508,7 +523,7 @@ var Brack = {
 	},
 
 	repopulate : function() {
-
+		console.time('Repopulation');
 		Brack.loadPList();
 		Brack.assignConfig();
 		if(Brack.pPlayerList !== null) {
@@ -519,7 +534,7 @@ var Brack = {
 			}
 			Brack.playerCounter();
 		}
-
+		console.timeEnd('Repopulation');
 
 	},
 
@@ -541,8 +556,8 @@ function Player(name) {
 }
 
 $(document).ready(function() {
-
+console.time('Run It');
 	Brack.globalSelectors();
 	Brack.makeItHappen();
-
+console.timeEnd('Run It');
 });
