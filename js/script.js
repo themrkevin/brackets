@@ -561,5 +561,3 @@ console.time('Run It');
 	Brack.makeItHappen();
 console.timeEnd('Run It');
 });
-
-//console.log('test commit push with git')
