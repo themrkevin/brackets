@@ -314,9 +314,14 @@ a.config-toggle {
   margin:0 0 20px 0;
   -webkit-box-shadow:  0px 5px 5px 2px rgba(0, 0, 0, 0.5);      
   box-shadow:  0px 5px 5px 2px rgba(0, 0, 0, 0.5);
+  display:none;
 }
 
-.player-list-container, .config-container {
+#option-panels li li {
+  display:block;
+}
+
+#option-panels .template {
   display:none;
 }
 
@@ -400,6 +405,11 @@ a.config-toggle {
 #player-form .submit {
   width:50px;
   color:#333;
+  background:#ccc;
+}
+
+#player-form .submit:hover {
+  background:#ddd;
 }
 
 .list-item-name {
@@ -499,6 +509,30 @@ a.switch {
   width:auto;
   float:right;
   margin:10px 0;
+  background:#ccc;
+}
+
+#config-form .submit:hover {
+  background:#ddd;
+}
+
+#new-tournament {
+  color:#ccc;
+}
+
+#new-tournament .confirm {
+  color:#666;
+  background:#ccc;
+  float:right;
+  padding:5px 10px;
+  margin:0 0 0 10px;
+  border-radius:5px;
+  cursor:pointer;
+  display:block;
+}
+
+#new-tournament .confirm:hover {
+  background:#ddd;
 }
 
 #brackets {
@@ -510,7 +544,7 @@ a.switch {
 }
 
 #brackets h1 {
-  font-size:200%:;
+  font-size:200%;
 }
 
 #brackets h2 {

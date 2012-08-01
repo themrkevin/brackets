@@ -6,10 +6,11 @@ var playerList = []
 var TourConfig = {}
 var Brack = {
 
+	/**
+	 * throwing the global toys in here to avoid any conflict
+	 * from future potential plugins && I just find it easier to read
+	 **/
 	globalSelectors : function() {
-
-		//throwing the global toys in here to avoid any conflict
-		//from future potential plugins && I just find it easier to read
 
 		this.theForm = $('form');
 		this.playerList = $('#player-list');
@@ -17,6 +18,8 @@ var Brack = {
 		this.configForm = $('#config-form');
 		this.brackets = $('#brackets');
 		this.controlPanel = $('#control-panel');
+		this.optionPanels = $('#option-panels');
+		this.resetAll = $('#new-tournament');
 		this.theField = Brack.theForm.find('input[type="text"]');
 		this.nameField = Brack.playerForm.find('input[name="name"]');
 		this.titleField = Brack.configForm.find('input[name="name"]');
@@ -27,7 +30,9 @@ var Brack = {
 
 	},
 
-	//create players
+	/**
+	 * Create Players
+	 **/
 	createPlayer : function(playerName) {
 		
 		//this creates the new player and assigns the name
@@ -51,26 +56,34 @@ var Brack = {
 
 	},
 
+	/**
+	 * Store players into localStorage and spit it back out as an array
+	 **/
 	loadPList : function() {
 		Brack.sPlayerList = localStorage.getItem('playerList');
 		Brack.pPlayerList = JSON.parse(Brack.sPlayerList);
 		//console.log('pPlayerList loaded: ', Brack.pPlayerList);
 	},
 
+	/**
+	 * Find && Replace template data
+	 **/
 	template : function(item,source) {
 
-		//find && replace template data
 		item.find('.list-item-name').text(source.name);
 		return item;
 	},
 
+	/**
+	 * Display players to list && Clones the template
+	 **/
 	addToList : function(thisPlayer) {
 		
 		Brack.listTemplate = Brack.playerList.find('.template');
 
-		//display players to list && clone template
 		var $newItem = Brack.listTemplate.clone().removeClass('template');
 		Brack.template($newItem,thisPlayer).appendTo((Brack.playerList));
+
 	},
 
 	removePlayer : function() {
@@ -105,6 +118,9 @@ var Brack = {
 		
 	},
 
+	/**
+	 * Confirms clearAllInit();
+	 **/
 	clearAllPlayer : function() {
 
 		Brack.clearAll = Brack.playerListContainer.find('.clear-all');
@@ -138,6 +154,9 @@ var Brack = {
 
 	},
 
+	/**
+	 * Clears all players from localStorage && list, then updates the player count
+	 **/
 	clearAllInit : function() {
 
 		//target all the players (li) except for template (li)
@@ -161,16 +180,24 @@ var Brack = {
 
 	},
 
+	/**
+	 * Makes sure that the most recent data is being displayed
+	 **/
 	updateThatJunk : function() {
 		Brack.playerCounter();
-		Brack.configTypeCheck(Brack.typeField,Brack.roundsField);
-		Brack.filterConfig();
+		if(Brack.pTourConfig !== null) {
+			Brack.configTypeCheck(Brack.typeField,Brack.roundsField);
+			Brack.filterConfig();
+		}
 	},
 
+	/**
+	 * Toggles the player list Add Player/Clear All form
+	 **/
 	toggleOptions : function() {
 
 		Brack.optionsButton = Brack.playerList.find('.add');
-		//opens the form to add players
+
 		Brack.optionsButton.click(function() {
 			if(Brack.playerForm.is(':visible')) {
 				$(this).removeClass('neg');
@@ -189,36 +216,13 @@ var Brack = {
 			return false;
 		});
 
-		//opens the form to edit configuration
-		Brack.conOptButton = Brack.configForm.find('.add');
-		
-		Brack.conOptButton.click(function() {
-			if(Brack.configSubmit.is(':visible')) {
-				$(this).removeClass('neg');
-				$(this).addClass('pos');
-				Brack.configSubmit.addClass('hidden');
-				Brack.titleField.addClass('hidden');
-				Brack.typeField.addClass('hidden');
-				Brack.roundsField.addClass('hidden');
-				Brack.assignConfig();
-			} else {
-				$(this).removeClass('pos');
-				$(this).addClass('neg');
-				Brack.configSubmit.removeClass('hidden');
-				Brack.titleField.removeClass('hidden');
-				Brack.typeField.removeClass('hidden');
-				Brack.roundsField.removeClass('hidden');
-			}
-
-			return false;
-		});
-
-
 	},
 
+	/**
+	 * Checks to see if there are players in the field, if not, then the clear button will not display
+	 **/
 	toggleClear : function() {
 
-		//this will check to see if there are any players in the field, if not then the clear button will not display
 		if(Brack.playerList.find('li:not(".template")').is(':visible')) {
 			Brack.clearAll.removeClass('hidden');
 		} else {
@@ -228,6 +232,7 @@ var Brack = {
 	},
 
 	valueOfKey : function(value) {
+
 		for(var pos in Brack.pPlayerList) {
 			if(Brack.pPlayerList[pos].name === value) {
 				console.log('found a match to: ', value);
@@ -235,8 +240,12 @@ var Brack = {
 				Brack.playerPos = pos;
 			}
 		}
+
 	},
 
+	/**
+	 * Displays player count
+	 **/
 	playerCounter : function() {
 
 		Brack.playerCount = Brack.playerList.find('.count');
@@ -244,9 +253,10 @@ var Brack = {
 
 	},
 
+	/**
+	 * Contains all the panel controls (Main Navigation)
+	 **/
 	panelControls : function() {
-
-		Brack.optionPanels = $('#option-panels');
 
 		//controls the players panel
 		Brack.playerListContainer = Brack.optionPanels.find('.player-list-container');
@@ -266,39 +276,78 @@ var Brack = {
 		Brack.configToggle.click(function() {
 			if(Brack.configContainer.is(':visible')) {
 				Brack.configContainer.hide();
-				Brack.conOptButton.removeClass('neg');
-				Brack.conOptButton.addClass('pos');
 			} else {
 				Brack.filterConfig();
 				Brack.configContainer.show();
 			}
 			
+			return false;
+		});
+
+		//controls the reset panel
+		Brack.resetToggleContainer = Brack.optionPanels.find('.reset-all-container');
+		Brack.resetToggle = Brack.controlPanel.find('.reset-all');
+
+		Brack.resetToggle.click(function() {
+			if(Brack.resetToggleContainer.is(':visible')) {
+				Brack.resetToggleContainer.hide();
+			} else {
+				Brack.resetToggleContainer.show();
+			}
 
 			return false;
 		});
 
+
 	},
+
+
 
 	buildBrackets : function() {
 
 	},
 
+	/**
+	 * Assigns all congifuration settings to both the forms and bracket tables
+	 **/
 	assignConfig : function() {
 
 		Brack.loadTourConfig();
 		if(Brack.pTourConfig == null) {
 			console.log('no configuration saved');
+
+			//update bracket info
+			Brack.brackets.find('h1').text('Event Name');
+			Brack.brackets.find('h2').html('Event Type: <i>0<i> Rounds');
+
+			//update config forms
+			Brack.configForm.find('.input-rounds').text('Enter # of Rounds');
+			Brack.titleField.val('Enter Event Name');
+			Brack.typeField.val('Swiss');
+			Brack.roundsField.val('Enter # of Rounds');
 		} else {
+			console.log('new config set');
+
+			//update bracket info
 			Brack.brackets.find('h1').text(Brack.pTourConfig.title);
 			Brack.brackets.find('h2').html(Brack.pTourConfig.type + ': <i>' + Brack.pTourConfig.rounds + '<i> Rounds');
-			Brack.configForm.find('.input-title').text(Brack.pTourConfig.title);
-			Brack.configForm.find('.input-type').text(Brack.pTourConfig.type);
+			//Brack.configForm.find('.input-title').text(Brack.pTourConfig.title);
+			//Brack.configForm.find('.input-type').text(Brack.pTourConfig.type);
+
+			//update config forms
 			Brack.configForm.find('.input-rounds').text(Brack.pTourConfig.rounds);
+			Brack.titleField.val(Brack.pTourConfig.title);
+			Brack.typeField.val(Brack.pTourConfig.type);
+			Brack.roundsField.val(Brack.pTourConfig.rounds);
 		}
 
 	},
 
+	/**
+	 * Checks available data in localStoarge and filters config form fields
+	 **/
 	filterConfig : function() {
+
 		console.time('Filter Configuration');
 		Brack.roundsSet = Brack.configForm.find('.input-rounds');
 
@@ -307,68 +356,36 @@ var Brack = {
 			console.log('playerList is null');
 			console.log('pTourConfig is null');
 
-			//handle form field elements
-			Brack.titleField.removeClass('hidden');
-			Brack.typeField.removeClass('hidden');
 			Brack.roundsField.addClass('hidden');
-			Brack.configSubmit.removeClass('hidden');
 
-			//hide rounds input field and label
-			Brack.currentSet.addClass('hidden');
 			Brack.configForm.find('.config-rounds').addClass('hidden');
 
-			//handle options toggle
-			Brack.conOptButton.addClass('hidden');
 		} else if ((Brack.pPlayerList !== null || Brack.pPlayerList.length > 0) && Brack.pTourConfig == null) {
 			//filter state
 			console.log('playerList is available');
 			console.log('pTourConfig is null');
 
-			//handle field elements
-			Brack.titleField.removeClass('hidden');
-			Brack.typeField.removeClass('hidden');
 			Brack.roundsField.removeClass('hidden');
 
-			//hide rounds input field and label
-			Brack.currentSet.addClass('hidden');
-
-			//handle options toggle
-			Brack.conOptButton.addClass('hidden');
 		} else if ((Brack.pPlayerList == null || Brack.pPlayerList.length == 0) && Brack.pTourConfig !== null) {
 			//filter state
 			console.log('playerList is null');
 			console.log('pTourConfig is available');
 
-			//handle field elements
-			Brack.titleField.addClass('hidden');
-			Brack.typeField.addClass('hidden');
-			Brack.roundsField.addClass('hidden');
-
-			//hide rounds input field and label
-			Brack.currentSet.removeClass('hidden');
-
-			//handle options toggle
-			Brack.conOptButton.removeClass('hidden');
 		} else {
 			//filter state
 			console.log('playerList is available');
 			console.log('pTourConfig is available');
 
-			//handle form field elements
-			Brack.titleField.addClass('hidden');
-			Brack.typeField.addClass('hidden');
-			Brack.roundsField.addClass('hidden');
-			Brack.configSubmit.addClass('hidden');
-
-			//hide rounds input field and label
-			Brack.currentSet.removeClass('hidden');
-
-			//handle options toggle
-			Brack.conOptButton.removeClass('hidden');
 		}
+
 		console.timeEnd('Filter Configuration');
+
 	},
 
+	/**
+	 * Checks for the type of tournament and computes # of rounds if applicable
+	 **/
 	configTypeCheck : function(typeField,roundsField) {
 
 		Brack.inputRounds = Brack.configForm.find('.input-rounds');
@@ -397,6 +414,7 @@ var Brack = {
 				}
 
 				Brack.inputRounds.text(totalRounds);
+				Brack.inputRounds.removeClass('hidden');
 				roundsField.addClass('hidden');
 			} else if(typeField.val() === 'Double Elimination') {
 				totalRounds = (2*players-1);
@@ -404,15 +422,23 @@ var Brack = {
 					totalRounds = 0;
 				}
 				Brack.inputRounds.text(totalRounds);
+				Brack.inputRounds.removeClass('hidden');
 				roundsField.addClass('hidden');
 			} else if(typeField.val() === 'Round Robin') {
 				totalRounds = (players/2*(players-1));
 				Brack.inputRounds.text(totalRounds);
 				roundsField.addClass('hidden');
+				Brack.inputRounds.removeClass('hidden');
 			} else {
-				totalRounds = 'Enter # of Rounds';
+				// else use Swiss - # of Rounds will be input manually (Defaul = 3)
+				if(Brack.pTourConfig.rounds) {
+					totalRounds = Brack.pTourConfig.rounds;
+				} else {
+					totalRounds = 'Enter # of Rounds';
+				}
 				Brack.inputRounds.text(3);
 				roundsField.removeClass('hidden');
+				Brack.inputRounds.addClass('hidden');
 			}
 
 			roundsField.val(totalRounds);
@@ -435,12 +461,18 @@ var Brack = {
 
 	},
 
+	/**
+	 * Store Config settings into local storage and return as an object
+	 **/
 	loadTourConfig : function() {
 		Brack.sTourConfig = localStorage.getItem('TourConfig');
 		Brack.pTourConfig = JSON.parse(Brack.sTourConfig);
 		//console.log('pTourConfig loaded: ', Brack.pTourConfig);
 	},
 
+	/**
+	 * General form functions
+	 **/
 	formTricks : function() {
 		
 		Brack.fieldInput;
@@ -450,7 +482,7 @@ var Brack = {
 			if(this.value == this.defaultValue) {
 				this.value = '';
 			}
-			if(this.value != this.defaultValue){  
+			if(this.value != this.defaultValue) {  
 	            this.select();
 	        } 
 		});
@@ -461,6 +493,7 @@ var Brack = {
 			}
 		});
 
+		// player form submit functions
 		Brack.playerForm.submit(function() {
 			//take the input value of the name field and shove it into the player maker
 			Brack.fieldInput = Brack.nameField.val();
@@ -476,6 +509,8 @@ var Brack = {
 			Brack.configTypeCheck(Brack.typeField,Brack.roundsField);
 		});
 
+
+		// configuration submit functions
 		Brack.configForm.submit(function() {
 			var numericExpression = /^[0-9]+$/;
 			if(Brack.roundsField.val().match(numericExpression) || Brack.roundsField.val() === 'Enter # of Rounds' || Brack.roundsField.val() == '-Infinity' || Brack.roundsField.val() == '-1') {
@@ -499,18 +534,6 @@ var Brack = {
 				console.log('Type: ', TourConfig.type);
 				console.log('Rounds: ', TourConfig.rounds);
 
-				//handle form field elements
-				Brack.titleField.addClass('hidden');
-				Brack.typeField.addClass('hidden');
-				Brack.roundsField.addClass('hidden');
-				Brack.configSubmit.addClass('hidden');
-
-				//hide rounds input field and label
-				Brack.currentSet.removeClass('hidden');
-
-				//handle options toggle
-				Brack.conOptButton.removeClass('hidden');
-				Brack.conOptButton.addClass('pos');
 			} else {
 				Brack.roundsField.select();
 				Brack.configForm.find('.input-rounds').text('This is not a number =(');
@@ -522,7 +545,31 @@ var Brack = {
 
 	},
 
+	/**
+	 *	Resets all settings - clears localStorage
+	 **/
+	startNewTourn : function() {
+
+		var $resetAll = Brack.resetAll.find('.do-it');
+		var $cancelReset = Brack.resetAll.find('.cancel');
+
+		$resetAll.click(function() {
+			Brack.clearAllInit();
+			localStorage.clear();
+			Brack.assignConfig();
+		});
+
+		$cancelReset.click(function() {
+			Brack.optionPanels.find('.reset-all-container').hide();
+		});
+
+	},
+
+	/**
+	 * Handles reloading all locally stored elements on refresh
+	 **/
 	repopulate : function() {
+
 		console.time('Repopulation');
 		Brack.loadPList();
 		Brack.assignConfig();
@@ -538,6 +585,9 @@ var Brack = {
 
 	},
 
+	/**
+	 * Makes things happen :)
+	 **/
 	makeItHappen : function() {
 		
 		Brack.repopulate();
@@ -545,16 +595,22 @@ var Brack = {
 		Brack.removePlayer();
 		Brack.formTricks();
 		Brack.panelControls();
+		Brack.startNewTourn();
 		Brack.clearAllPlayer();
 
 	}
 }
 
-//player constructor
+/**
+ * Player Constructor
+ **/
 function Player(name) {
 	this.name = name;
 }
 
+/**
+ * On dom ready
+ **/
 $(document).ready(function() {
 console.time('Run It');
 	Brack.globalSelectors();

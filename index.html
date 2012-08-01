@@ -45,6 +45,9 @@
         <li class="config">
           <a href="" class="config-toggle ir">Configuration</a>
         </li>
+        <li class="reset">
+          <a href="" class="reset-all ir">Start New Tournament</a>
+        </li>
       </ul><!-- #control-panel -->
       <ul id="option-panels">
         <li class="player-list-container">
@@ -72,17 +75,17 @@
           <form id="config-form" class="clearfix" action="">
             <div class="top clearfix">
               <h2>Configuration</h2>
-              <a href="" class="manager-link add pos"></a>
+              <!--<a href="" class="manager-link add pos"></a>-->
             </div>
             <div class="config-title">
               <label>Event Title:</label>
-              <p class="set input-title">Default Title</p>
-              <input type="text" tabindex="1" class="name hidden" name="name" value="Enter Event Name" />
+              <p class="set input-title hidden">Default Title</p>
+              <input type="text" tabindex="1" class="name" name="name" value="Enter Event Name" />
             </div>
             <div class="config-type">
               <label>Event Type:</label>
-              <p class="set input-type">Limited Rounds</p>
-              <select tabindex="2" class="type hidden" name="type" />
+              <p class="set input-type hidden">Swiss</p>
+              <select tabindex="2" class="type" name="type" />
                 <option value="Swiss">Swiss</option>
                 <option value="Single Elimination">Single Elimination</option>
                 <option value="Double Elimination">Double Elimination</option>
@@ -91,12 +94,20 @@
             </div>
             <div class="config-rounds">
               <label>Event Rounds:</label>
-              <p class="set input-rounds">3</p>
-              <input type="text" tabindex="3" class="rounds hidden" name="rounds" value="Enter # of Rounds" />
+              <p class="set input-rounds hidden"># of Rounds</p>
+              <input type="text" tabindex="3" class="rounds" name="rounds" value="Enter # of Rounds" />
             </div>
-            <input type="submit" class="submit hidden" value="Save Changes" />
+            <input type="submit" class="submit" value="Save Changes" />
           </form>
         </li><!-- .config-container -->
+        <li class="reset-all-container">
+          <div id="new-tournament" class="clearfix">
+          <h2>New Tournament</h2>
+          <p>This will reset all your settings.</p>
+          <span class="confirm cancel">Cancel</span>
+          <span class="confirm do-it">Do it</span>
+        </div>
+        </li><!-- .reset-all-confirm -->
       </ul><!-- #option-panels -->
     </div><!-- .left -->
     <div class="right">
