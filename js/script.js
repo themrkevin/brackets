@@ -3,6 +3,8 @@
 */
 
 var playerList = []
+var mainBrack = []
+var losersBrack = []
 var TourConfig = {}
 var Brack = {
 
@@ -66,9 +68,9 @@ var Brack = {
 	},
 
 	/**
-	 * Find && Replace template data
+	 * Find && Replace player list template data
 	 **/
-	template : function(item,source) {
+	pListTemplate : function(item,source) {
 
 		item.find('.list-item-name').text(source.name);
 		return item;
@@ -82,7 +84,7 @@ var Brack = {
 		Brack.listTemplate = Brack.playerList.find('.template');
 
 		var $newItem = Brack.listTemplate.clone().removeClass('template');
-		Brack.template($newItem,thisPlayer).appendTo((Brack.playerList));
+		Brack.pListTemplate($newItem,thisPlayer).appendTo((Brack.playerList));
 
 	},
 
@@ -231,6 +233,9 @@ var Brack = {
 
 	},
 
+	/**
+	 * Check for Player position in array
+	 **/
 	valueOfKey : function(value) {
 
 		for(var pos in Brack.pPlayerList) {
@@ -271,7 +276,6 @@ var Brack = {
 		//controls the configuration panel
 		Brack.configContainer = Brack.optionPanels.find('.config-container');
 		Brack.configToggle = Brack.controlPanel.find('.config-toggle');
-		//Brack.configTypeCheck(Brack.typeField,Brack.roundsField);
 
 		Brack.configToggle.click(function() {
 			if(Brack.configContainer.is(':visible')) {
@@ -298,13 +302,33 @@ var Brack = {
 			return false;
 		});
 
+	},
+
+	/**
+	 * Find && Replace bracket template data
+	 **/
+	matchTemplate : function(item,source) {
+
+		console.log('The source is: ', source);
+		//item.find('.player-name').text(source.name);
+		//return item;
 
 	},
 
-
-
 	buildBrackets : function() {
 
+		Brack.roundTemp = Brack.brackets.find('.round-template');
+		Brack.matchTemp = Brack.brackets.find('.match-template');
+		var numOfPlayers = Brack.pPlayerList.length;
+		var match;
+		var i;
+
+		for(i = 0; i < numOfPlayers; i++) {
+			match = Brack.matchTemp.clone().removeClass('match-template');
+			//Brack.matchTemplate(match,Brack.pPlayerList[i]).appendTo((Brack.roundTemp));
+			console.log(match);
+		}
+		
 	},
 
 	/**
@@ -331,8 +355,6 @@ var Brack = {
 			//update bracket info
 			Brack.brackets.find('h1').text(Brack.pTourConfig.title);
 			Brack.brackets.find('h2').html(Brack.pTourConfig.type + ': <i>' + Brack.pTourConfig.rounds + '<i> Rounds');
-			//Brack.configForm.find('.input-title').text(Brack.pTourConfig.title);
-			//Brack.configForm.find('.input-type').text(Brack.pTourConfig.type);
 
 			//update config forms
 			Brack.configForm.find('.input-rounds').text(Brack.pTourConfig.rounds);
@@ -430,7 +452,7 @@ var Brack = {
 				roundsField.addClass('hidden');
 				Brack.inputRounds.removeClass('hidden');
 			} else {
-				// else use Swiss - # of Rounds will be input manually (Defaul = 3)
+				// else use Swiss - # of Rounds will be input manually (Default = 3)
 				if(Brack.pTourConfig.rounds) {
 					totalRounds = Brack.pTourConfig.rounds;
 				} else {
@@ -557,6 +579,7 @@ var Brack = {
 			Brack.clearAllInit();
 			localStorage.clear();
 			Brack.assignConfig();
+			Brack.updateThatJunk();
 		});
 
 		$cancelReset.click(function() {
@@ -612,8 +635,10 @@ function Player(name) {
  * On dom ready
  **/
 $(document).ready(function() {
+
 console.time('Run It');
 	Brack.globalSelectors();
 	Brack.makeItHappen();
 console.timeEnd('Run It');
+
 });
