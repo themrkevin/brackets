@@ -14,21 +14,27 @@ var Brack = {
 	 **/
 	globalSelectors : function() {
 
+		//Forms
 		this.theForm = $('form');
-		this.playerList = $('#player-list');
 		this.playerForm = $('#player-form');
 		this.configForm = $('#config-form');
-		this.brackets = $('#brackets');
-		this.controlPanel = $('#control-panel');
-		this.optionPanels = $('#option-panels');
-		this.resetAll = $('#new-tournament');
 		this.theField = Brack.theForm.find('input[type="text"]');
 		this.nameField = Brack.playerForm.find('input[name="name"]');
 		this.titleField = Brack.configForm.find('input[name="name"]');
 		this.typeField = Brack.configForm.find('select[name="type"]');
 		this.roundsField = Brack.configForm.find('input[name="rounds"]');
 		this.configSubmit = Brack.configForm.find('.submit');
-		this.currentSet = Brack.configForm.find('.set');
+		
+		//Panels
+		this.controlPanel = $('#control-panel');
+		this.optionPanels = $('#option-panels');
+		this.resetAll = $('#new-tournament');
+
+		//Elements
+		this.brackets = $('#brackets');
+		this.playerList = $('#player-list');
+		this.roundTemp = Brack.brackets.find('.round-template');
+		this.matchTemp = Brack.brackets.find('.match-template');
 
 	},
 
@@ -310,25 +316,66 @@ var Brack = {
 	matchTemplate : function(item,source) {
 
 		console.log('The source is: ', source);
-		//item.find('.player-name').text(source.name);
+		item.find('.player-name').text(source.name);
 		//return item;
 
 	},
 
+	/**
+	 * Build brackets & clones template for matches
+	 **/
 	buildBrackets : function() {
 
-		Brack.roundTemp = Brack.brackets.find('.round-template');
-		Brack.matchTemp = Brack.brackets.find('.match-template');
 		var numOfPlayers = Brack.pPlayerList.length;
+		var numOfMatches = numOfPlayers/2;
 		var match;
 		var i;
 
-		for(i = 0; i < numOfPlayers; i++) {
-			match = Brack.matchTemp.clone().removeClass('match-template');
-			//Brack.matchTemplate(match,Brack.pPlayerList[i]).appendTo((Brack.roundTemp));
+		for(i = 0; i < numOfMatches; i++) {
+			match = Brack.matchTemp
+						.clone()
+						.removeClass('match-template template')
+						.addClass('match-' + i)
+						.appendTo(Brack.matchTemp.parent());
 			console.log(match);
 		}
 		
+	},
+
+	/**
+	 * randomizeList() reference
+	 * brought to you by http://css-tricks.com/snippets/javascript/shuffle-array/
+	 *
+	 *	function Shuffle(o) {
+	 *		for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+	 *		return o;
+	 *	};
+	 *
+	 **/
+
+	/**
+	 * Generates a random version of inputted list
+	 **/
+	randomizeList : function(list) {
+
+		for(var j, x, i = list.length; i; j = parseInt(Math.random() * i), x = list[--i], list[i] = list[j], list[j] = x);
+		return list;
+
+	},
+
+	/**
+	 *	Distributes players into the first round of matches
+	 **/
+	seatPlayers : function() {
+
+		var r_pPlayerList = Brack.pPlayerList;
+
+		for(i = 0; i < r_pPlayerList.length; i++) {
+
+			//$(r_pPlayerList[i].name).appendTo();
+			console.log(r_pPlayerList[i].name);
+		}
+
 	},
 
 	/**
