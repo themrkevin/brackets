@@ -252,39 +252,36 @@ header {
 }
 
 .left {
-  position:relative;
-  float:left;
-  padding:10px;
 }
 
 .right {
   position:relative;
-  float:left;
-  padding:10px;
-}
-#control-panel {
-  margin:0;
-  padding:0;
-  width:40px;
-  float:left;
+  padding:20px;
+  z-index:100;
 }
 
-#control-panel li {
+#main .settings-toggle {
   background:url(../images/leather.png) #333;
   -webkit-box-shadow:  0px 5px 5px 2px rgba(0, 0, 0, 0.5);      
   box-shadow:  0px 5px 5px 2px rgba(0, 0, 0, 0.5);
-  border-radius:40px;
-  width:40px;
-  height:40px;
-  margin:0 0 10px 0;
-  list-style:none;
+  border-radius:0 0 20px 0;
+  margin:0;
+  position:absolute;
+  top:0;
+  left:0;
+  z-index:102;
+  padding:10px 20px 5px 15px;
 }
 
-#control-panel li a {
+#main .settings-toggle a {
   text-decoration: none;
-  color:#F60;
+  color:#01B9B5;
   width:100%;
   height:100%;
+  font-size:150%;
+  font-family: SansitaOneRegular;
+  font-weight: normal;
+  text-shadow: 0 2px 2px rgba(0,0,0,0.5);
 }
 
 a.list-toggle {
@@ -300,21 +297,34 @@ a.config-toggle {
 }
 
 #option-panels {
-  margin:0 0 0 10px;
+  position:fixed;
+  top:0;
+  width:305px;
+  height:100%;
+  overflow:auto;
+  margin:0;
   padding:0;
-  float:left;
+  z-index:101;
+  background:url(../images/leather.png) repeat;
+  -webkit-box-shadow:  0px 5px 5px 2px rgba(0, 0, 0, 0.5);      
+  box-shadow:  0px 5px 5px 2px rgba(0, 0, 0, 0.5);
+  -moz-transition: all 0.5s ease-in-out;
+  -webkit-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+}
+
+.option-open {
+  left:0;
+}
+
+.option-close {
+  left:-310px;
 }
 
 #option-panels li {
   list-style:none;
-  width:250px;
-  background:url(../images/leather.png) #333;
-  padding:20px;
-  border-radius:7px;
-  margin:0 0 20px 0;
-  -webkit-box-shadow:  0px 5px 5px 2px rgba(0, 0, 0, 0.5);      
-  box-shadow:  0px 5px 5px 2px rgba(0, 0, 0, 0.5);
-  display:none;
+  padding:10px 20px;
 }
 
 #option-panels li li {
