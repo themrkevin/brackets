@@ -39,6 +39,71 @@ var Brack = {
 
 	},
 
+// Local Storaging ----------------------------------------------------------------
+
+	/**
+	 * Store players into localStorage and spit it back out as an array
+	 **/
+	loadPList : function() {
+		Brack.sPlayerList = localStorage.getItem('playerList');
+		Brack.pPlayerList = JSON.parse(Brack.sPlayerList);
+		//console.log('pPlayerList loaded: ', Brack.pPlayerList);
+	},
+
+	/**
+	 * Store Config settings into local storage and return as an object
+	 **/
+	loadTourConfig : function() {
+		Brack.sTourConfig = localStorage.getItem('TourConfig');
+		Brack.pTourConfig = JSON.parse(Brack.sTourConfig);
+		//console.log('pTourConfig loaded: ', Brack.pTourConfig);
+	},
+
+	/**
+	 * Store Config settings into local storage and return as an object
+	 **/
+	loadOpeningRound : function() {
+		Brack.sR_PlayerList = localStorage.getItem('r_playerList');
+		Brack.openingRound = JSON.parse(Brack.sR_PlayerList);
+		console.log('openingRound loaded: ', Brack.openingRound);
+	},
+
+// --------------------------------------------------------------- Local Storaging 
+// Templates Compilation ---------------------------------------------------------
+
+	/**
+	 * Find && Replace player list template data
+	 **/
+	pListTemplate : function(item,source) {
+
+		item.find('.list-item-name').text(source.name);
+		return item;
+	},
+
+	/**
+	 * Find && Replace match-up template data
+	 **/
+	matchTemplate : function(item,source) {
+
+		console.log('The source is: ', source);
+		item.find('.player-name').text(source.name);
+		return item;
+
+	},
+
+	/**
+	 * Find && Replace round template data
+	 **/
+	roundTemplate : function(item,source) {
+
+		console.log('The source is: ', source);
+		item.find('.this-round').text(source.name);
+		return item;
+
+	},
+
+// --------------------------------------------------------- Templates Compilation
+
 	/**
 	 * Create Players
 	 **/
@@ -65,24 +130,6 @@ var Brack = {
 		Brack.updateThatJunk();
 		Brack.configTypeCheck(Brack.typeField,Brack.roundsField);
 
-	},
-
-	/**
-	 * Store players into localStorage and spit it back out as an array
-	 **/
-	loadPList : function() {
-		Brack.sPlayerList = localStorage.getItem('playerList');
-		Brack.pPlayerList = JSON.parse(Brack.sPlayerList);
-		//console.log('pPlayerList loaded: ', Brack.pPlayerList);
-	},
-
-	/**
-	 * Find && Replace player list template data
-	 **/
-	pListTemplate : function(item,source) {
-
-		item.find('.list-item-name').text(source.name);
-		return item;
 	},
 
 	/**
@@ -265,6 +312,7 @@ var Brack = {
 
 		Brack.settingsContainer = Brack.main.find('.settings-toggle');
 		Brack.settingsToggle = Brack.settingsContainer.find('a');
+		Brack.settingsClose = Brack.settingsContainer.find('.settings-close')
 		Brack.playerListContainer = Brack.optionPanels.find('.player-list-container');
 
 		Brack.settingsToggle.click(function() {
@@ -272,24 +320,15 @@ var Brack = {
 				Brack.optionPanels
 					.removeClass('option-close')
 					.addClass('option-open');
+				Brack.settingsClose.text('<<');
 			} else {
 				Brack.optionPanels
 					.addClass('option-close')
 					.removeClass('option-open');
+				Brack.settingsClose.text('>>');
 			}
 			return false;
 		});
-
-	},
-
-	/**
-	 * Find && Replace bracket template data
-	 **/
-	matchTemplate : function(item,source) {
-
-		console.log('The source is: ', source);
-		item.find('.player-name').text(source.name);
-		//return item;
 
 	},
 
@@ -311,6 +350,13 @@ var Brack = {
 						.appendTo(Brack.matchTemp.parent());
 			console.log(match);
 		}
+
+		/*
+		Brack.listTemplate = Brack.playerList.find('.template');
+
+		var $newItem = Brack.listTemplate.clone().removeClass('template');
+		Brack.pListTemplate($newItem,thisPlayer).appendTo((Brack.playerList));
+		*/
 		
 	},
 
@@ -342,9 +388,11 @@ var Brack = {
 
 		var r_pPlayerList = Brack.pPlayerList;
 
-		for(i = 0; i < r_pPlayerList.length; i++) {
+		//store r_playerList locally && reload it as a local object
+		localStorage.setItem('r_playerList', JSON.stringify(r_playerList));
+		Brack.loadOpeningRound();
 
-			//$(r_pPlayerList[i].name).appendTo();
+		for(i = 0; i < r_pPlayerList.length; i++) {
 			console.log(r_pPlayerList[i].name);
 		}
 
@@ -356,12 +404,13 @@ var Brack = {
 	assignConfig : function() {
 
 		Brack.loadTourConfig();
+		Brack.bracketHeads = $('#tournament-heads');
 		if(Brack.pTourConfig === null) {
 			console.log('assignConfig(): No configuration saved');
 
 			//update bracket info
-			Brack.brackets.find('h1').text('Event Name');
-			Brack.brackets.find('h2').html('Event Type: <i>0<i> Rounds');
+			Brack.bracketHeads.find('h1').text('Event Name');
+			Brack.bracketHeads.find('h2').html('Event Type: <i>0<i> Rounds');
 
 			//update config forms
 			Brack.configForm.find('.input-rounds').text('Enter # of Rounds');
@@ -372,8 +421,8 @@ var Brack = {
 			console.log('assignConfig(): New config set');
 
 			//update bracket info
-			Brack.brackets.find('h1').text(Brack.pTourConfig.title);
-			Brack.brackets.find('h2').html(Brack.pTourConfig.type + ': <i>' + Brack.pTourConfig.rounds + '<i> Rounds');
+			Brack.bracketHeads.find('h1').text(Brack.pTourConfig.title);
+			Brack.bracketHeads.find('h2').html(Brack.pTourConfig.type + ': <i>' + Brack.pTourConfig.rounds + '<i> Rounds');
 
 			//update config forms
 			Brack.configForm.find('.input-rounds').text(Brack.pTourConfig.rounds);
@@ -525,15 +574,6 @@ var Brack = {
 	},
 
 	/**
-	 * Store Config settings into local storage and return as an object
-	 **/
-	loadTourConfig : function() {
-		Brack.sTourConfig = localStorage.getItem('TourConfig');
-		Brack.pTourConfig = JSON.parse(Brack.sTourConfig);
-		//console.log('pTourConfig loaded: ', Brack.pTourConfig);
-	},
-
-	/**
 	 * General form functions
 	 **/
 	formTricks : function() {
@@ -596,6 +636,9 @@ var Brack = {
 				console.log('Title: ', TourConfig.title);
 				console.log('Type: ', TourConfig.type);
 				console.log('Rounds: ', TourConfig.rounds);
+				Brack.optionPanels
+					.removeClass('options-open')
+					.addClass('option-close');
 
 			} else {
 				Brack.roundsField.select();

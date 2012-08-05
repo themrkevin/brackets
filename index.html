@@ -39,6 +39,7 @@
   <div id="main" class="clearfix" role="main">
     <div class="settings-toggle">
       <a href="">Settings &amp; Stuff</a>
+      <a href="" class="settings-close">>></a>
     </div>
     <div class="left">
       <ul id="option-panels" class="option-close">
@@ -46,7 +47,7 @@
           <ul id="player-list">
             <div class="top clearfix">
               <h2>Players: <span class="count">0</span></h2>
-              <a href="" class="manager-link add pos"></a>
+              <a href="" class="manager-link add neg"></a>
             </div>
             <form id="player-form" class="clearfix" action="">
               <input type="text" tabindex="1" class="name" name="name" value="Enter Player Name" />
@@ -106,13 +107,14 @@
         </li>
       </ul>--><!-- #control-panel -->
     </div><!-- .left -->
-    <div class="right">
+    <div class="right clearfix">
+      <hgroup id="tournament-heads">
+        <h1>Event Name</h1>
+        <h2>Event Type: <i>0 Rounds</i></h2>
+      </hgroup>
       <div id="brackets">
-        <hgroup>
-          <h1>Event Name</h1>
-          <h2>Event Type: <i>0 Rounds</i></h2>
-        </hgroup>
         <div class="tourn-round round-template template">
+          <h1 class="this-round">Round #</h1>
           <ul class="match match-template template">
               <li><p class="player-name">Name</p></li>
               <li class="versus"><p>Versus</p></li>
