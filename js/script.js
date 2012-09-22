@@ -445,10 +445,12 @@ var Brack = {
 		Brack.Round_1 = Brack.pR_playerList;
 
 		console.log('seatPlayers():');
-		if(Brack.Round_1.length > 0) {
-			var thisPosition = (Brack.pPlayerList.length - 1);
+		if(Brack.Round_1) {
+			for(i = 0; i < Brack.Round_1.length; i++) {
+				console.log(Brack.Round_1[i].name);
+			}
 		} else {
-			var thisPosition = 0;
+			console.log('Players are not available');
 		}		
 
 	},
