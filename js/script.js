@@ -1,5 +1,36 @@
 /*
 	Author: Kevin Mangubat
+
+	To do list: 
+	Latest Note = 01/18/13
+	- It's been a while.
+
+	I think the last thing I completed was buildBracket(); - confirmed
+	Need to trace steps back, next step might be loading players into the brackets. 
+	- seatPlayers()
+	- populateBrack();
+
+	PROCESS:
+	1. Seating Players
+	------------------
+		seat 1st obj to fist open seat pos
+		add class "seated"
+		remove seated obj from array
+		repeat for each player
+
+	2. W-L
+	------
+		assign W-L
+		prompt for confirmation
+		W -> W array
+		assign class "winner [name]"
+		L -> L array
+		assign class "loser [name]"
+		 ~~~ Name used to retain memory incase of reset ~~~
+		display winner
+		display reset/undo button
+		~ maybe transition
+
 */
 
 var PlayerList = []
@@ -368,7 +399,7 @@ var Brack = {
 						.appendTo(Brack.matchTemp.parent());
 						
 			console.log(match);
-		} 
+		}
 
 	},
 
@@ -438,16 +469,28 @@ var Brack = {
 	},
 
 	/**
+	 * Populate Brackets fields and names etc.
+	 **/
+	populateBrack : function() {
+
+	},
+
+	/**
 	 *	Distributes players into the first round of matches
 	 **/
 	seatPlayers : function() {
 
 		Brack.Round_1 = Brack.pR_playerList;
+		var targetMatch;
+		var pickMatch;
 
 		console.log('seatPlayers():');
 		if(Brack.Round_1) {
-			for(i = 0; i < Brack.Round_1.length; i++) {
-				console.log(Brack.Round_1[i].name);
+			for(i = 0; i < Brack.pR_playerList.length/2; i++) {
+				targetMatch = 'match-' + (i + 1);
+				console.log('Target match: ', targetMatch);
+				pickMatch = Brack.brackets.find(targetMatch);
+				console.log('pickMatch: ', pickMatch);
 			}
 		} else {
 			console.log('Players are not available');
